@@ -63,8 +63,12 @@ class CommonsIndex:
             return overharvest_yield
 
     def get_restore_yield(self, restore_num):
+        if restore_num == 0:
+            return 0
         return -self.RESTORE_COST / restore_num
 
     def get_police_yield(self, police_num):
+        if police_num == 0:
+            return 0
         return -self.POLICE_COST / police_num
 
