@@ -1,4 +1,4 @@
-from GameLogic.RoundSubmission import RoundSubmission
+from GameLogic.PlayerActions import PlayerActions
 
 
 class CommonsIndex:
@@ -39,13 +39,13 @@ class CommonsIndex:
         sustain_num = round_score.total_sustain
         restore_num = round_score.total_restore
         police_num = round_score.total_police
-        if action == RoundSubmission.SUSTAIN:
+        if action == PlayerActions.SUSTAIN:
             earnings = self.get_sustain_yield(sustain_num)
-        elif action == RoundSubmission.OVERHARVEST:
+        elif action == PlayerActions.OVERHARVEST:
             earnings = self.get_overharvest_yield(sustain_num, police_num)
-        elif action == RoundSubmission.RESTORE:
+        elif action == PlayerActions.RESTORE:
             earnings = self.get_restore_yield(restore_num)
-        elif action == RoundSubmission.POLICE:
+        elif action == PlayerActions.POLICE:
             earnings = self.get_police_yield(police_num)
         else:
             raise Exception(f"Invalid action type {action}")

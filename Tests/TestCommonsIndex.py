@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from GameLogic.CommonsIndex import CommonsIndex
-from GameLogic.RoundSubmission import RoundSubmission
+from GameLogic.PlayerActions import PlayerActions
 
 
 class TestCommonsIndex(unittest.TestCase):
@@ -20,28 +20,28 @@ class TestCommonsIndex(unittest.TestCase):
         mock_score.total_restore = restore
         mock_score.total_police = police
         # Test restore
-        action = RoundSubmission.RESTORE
+        action = PlayerActions.RESTORE
         expected_yield = -CommonsIndex.RESTORE_COST / restore
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test police
-        action = RoundSubmission.POLICE
+        action = PlayerActions.POLICE
         expected_yield = -CommonsIndex.POLICE_COST / police
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test overharvest with police
-        action = RoundSubmission.OVERHARVEST
+        action = PlayerActions.OVERHARVEST
         expected_yield = -CommonsIndex.OVERHARVEST_FINE
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test overharvest no police
         mock_score.total_police = 0
-        action = RoundSubmission.OVERHARVEST
+        action = PlayerActions.OVERHARVEST
         expected_yield = 35
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test sustain
-        action = RoundSubmission.SUSTAIN
+        action = PlayerActions.SUSTAIN
         expected_yield = 20
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
