@@ -2,9 +2,15 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import json
+import argparse
+import sys
 import psycopg2
-
 from tornado.options import define, options, parse_command_line
+
+sys.path.insert(0, 'WebHandlers/')
+from handler import Handler
+
+
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -18,6 +24,8 @@ conn = psycopg2.connect(database = "commons",
                             host = "127.0.0.1", 
                             port = "5432")
 cursor = conn.cursor()
+
+parser = argparse.ArgumentParser(description='Commons game public python server.')
 
 def broadcast(obj):
     connect_message = json.dumps(obj)
@@ -41,9 +49,11 @@ class IndexHandler(tornado.web.RequestHandler):
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    player1 = 0;
-    player2 = 0;
-    game_id = 0;
+    player1 = 0
+    player2 = 0
+    game_id = 0
+
+    handler = Handler(cursor)
 
     def open(self, *args):
         # self.id = self.get_argument("Id")
@@ -112,15 +122,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         for log in chat_log:
             self.write_message(json.dumps({"name":log[0], "text":log[1], "type":"chat"}))
 
-    def handleChat(self, obj):
-        if len(obj["text"]) > 0:
-            obj["text"] = obj["text"].replace("<","")
-            cursor.execute(
-                """INSERT INTO chat (player_id, text)
-                    VALUES(%s, %s)""",
-                    (str(self.id), obj["text"]))
-            obj["name"] = clients[self.id]["name"]
-            broadcast(obj)
+    def handleChat(self, msg):
+        msg["player_id"] = self.id
+        msg["name"] = clients[self.id]["name"]
+        self.handler.handle_chat(msg)
+        broadcast(msg)
 
     def handleMove(self):
         if self.game_id != 0:
