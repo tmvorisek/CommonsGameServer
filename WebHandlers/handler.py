@@ -1,6 +1,4 @@
-import sqlalchemy
-
-class Handler():
+class handler():
     def __init__(self, cursor, params = {}):
         self.cursor = cursor
         
@@ -21,6 +19,5 @@ class Handler():
                     VALUES(%s, %s)""",
                     (str(msg["player_id"]), msg["text"]))
             return msg
-
         return {}
 
