@@ -9,7 +9,20 @@ class TestRoundScore(unittest.TestCase):
 
     def setUp(self):
         self.players = {i: i for i in range(4)}
+        s = PlayerActions.SUSTAIN
+        o = PlayerActions.OVERHARVEST
+        r = PlayerActions.RESTORE
+        p = PlayerActions.POLICE
+        self.one_each_actions = [s, o, r, p]
+        self.multi_actions = [o, o, o, o, r, r, r, r, r, s, s, p, p, p]
         self.game_round = 1
+
+    def make_round_score(self, actions):
+        round_score = RoundScore(self.game_round)
+        for player_num in range(len(actions)):
+            action = actions[player_num]
+            round_score.set_player_action(player_num, action)
+        return round_score
 
     def test_game_round(self):
         round_score = RoundScore(self.game_round)
@@ -30,29 +43,15 @@ class TestRoundScore(unittest.TestCase):
         self.assertEqual(p1_action, p1_actual_action)
         self.assertEqual(p2_action, p2_actual_action)
 
-    def test_totals_and_score_one_each(self):
-        round_score = RoundScore(self.game_round)
-        round_score.set_player_action(0, PlayerActions.OVERHARVEST)
-        round_score.set_player_action(1, PlayerActions.RESTORE)
-        round_score.set_player_action(2, PlayerActions.SUSTAIN)
-        round_score.set_player_action(3, PlayerActions.POLICE)
+    def test_totals_one_each(self):
+        round_score = self.make_round_score(self.one_each_actions)
         round_score.calculate_totals()
         self.assertEqual(1, round_score.total_sustain)
         self.assertEqual(1, round_score.total_overharvest)
         self.assertEqual(1, round_score.total_restore)
         self.assertEqual(1, round_score.total_police)
-        commons_index = CommonsIndex(7.0)
-        round_score.set_end_of_round_scores(commons_index)
-        overharvest_score = commons_index.get_yield(round_score, PlayerActions.OVERHARVEST)
-        sustain_score = commons_index.get_yield(round_score, PlayerActions.SUSTAIN)
-        restore_score = commons_index.get_yield(round_score, PlayerActions.RESTORE)
-        police_score = commons_index.get_yield(round_score, PlayerActions.POLICE)
-        self.assertEqual(overharvest_score, round_score.player_scores[0])
-        self.assertEqual(restore_score, round_score.player_scores[1])
-        self.assertEqual(sustain_score, round_score.player_scores[2])
-        self.assertEqual(police_score, round_score.player_scores[3])
 
-    def test_totals_none(self):
+    def test_totals_zero(self):
         round_score = RoundScore(self.game_round)
         round_score.calculate_totals()
         self.assertEqual(0, round_score.total_sustain)
@@ -61,23 +60,35 @@ class TestRoundScore(unittest.TestCase):
         self.assertEqual(0, round_score.total_police)
 
     def test_totals_multiple(self):
-        round_score = RoundScore(self.game_round)
-        round_score.set_player_action(0, PlayerActions.OVERHARVEST)
-        round_score.set_player_action(1, PlayerActions.OVERHARVEST)
-        round_score.set_player_action(2, PlayerActions.OVERHARVEST)
-        round_score.set_player_action(3, PlayerActions.OVERHARVEST)
-        round_score.set_player_action(4, PlayerActions.RESTORE)
-        round_score.set_player_action(5, PlayerActions.RESTORE)
-        round_score.set_player_action(6, PlayerActions.RESTORE)
-        round_score.set_player_action(7, PlayerActions.RESTORE)
-        round_score.set_player_action(8, PlayerActions.RESTORE)
-        round_score.set_player_action(9, PlayerActions.SUSTAIN)
-        round_score.set_player_action(10, PlayerActions.SUSTAIN)
-        round_score.set_player_action(11, PlayerActions.POLICE)
-        round_score.set_player_action(12, PlayerActions.POLICE)
-        round_score.set_player_action(13, PlayerActions.POLICE)
+        round_score = self.make_round_score(self.multi_actions)
         round_score.calculate_totals()
         self.assertEqual(2, round_score.total_sustain)
         self.assertEqual(4, round_score.total_overharvest)
         self.assertEqual(5, round_score.total_restore)
         self.assertEqual(3, round_score.total_police)
+
+    def test_calculate_scores_one_each(self):
+        round_score = self.make_round_score(self.one_each_actions)
+        commons_index = CommonsIndex(1.0)
+        round_score.set_end_of_round_scores(commons_index)
+        for player_num in range(len(self.one_each_actions)):
+            action = self.one_each_actions[player_num]
+            action_score = commons_index.get_yield(round_score, action)
+            player_score = round_score.get_player_score(player_num)
+            self.assertEqual(action_score, player_score)
+
+    def test_calculate_scores_multi_player(self):
+        round_score = self.make_round_score(self.multi_actions)
+        commons_index = CommonsIndex(1.0)
+        round_score.set_end_of_round_scores(commons_index)
+        for player_num in range(len(self.multi_actions)):
+            action = self.multi_actions[player_num]
+            action_score = commons_index.get_yield(round_score, action)
+            player_score = round_score.get_player_score(player_num)
+            self.assertEqual(action_score, player_score)
+
+    def test_is_over(self):
+        round_score = RoundScore(self.game_round)
+        self.assertFalse(round_score.is_over())
+        round_score.set_end_of_round_scores(CommonsIndex(1.))
+        self.assertTrue(round_score.is_over())
