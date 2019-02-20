@@ -25,7 +25,7 @@ class Game:
 
     def update_score_board(self):
         score_board = self.score_board
-        score_board.calcuate_end_of_round_scores(self.current_round, self.commons_index)
+        score_board.set_end_of_round_scores(self.current_round, self.commons_index)
 
     def update_commons_index(self):
         round_score = self.score_board.get_round_score(self.current_round)
@@ -38,6 +38,6 @@ class Game:
 
     def print_score_board(self):
         for player in self.players:
-            player_score = self.score_board.get_player_score_board(player)
+            player_score = self.score_board.get_player_score(player)
             print(f"Player {player}: {player_score}")
 

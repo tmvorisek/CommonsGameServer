@@ -12,7 +12,7 @@ class ScoreBoard:
     def get_round_score(self, game_round):
         return self.round_scores[game_round]
 
-    def calcuate_end_of_round_scores(self, game_round, commons_index):
+    def set_end_of_round_scores(self, game_round, commons_index):
         round_score = self.round_scores[game_round]
         round_score.set_end_of_round_scores(commons_index)
 
@@ -23,7 +23,7 @@ class ScoreBoard:
         round_score = self.round_scores[game_round]
         round_score.set_player_action(player_id, action)
 
-    def get_player_score_board(self, player_id):
+    def get_player_score(self, player_id):
         score_board = {player_id: []}
         for game_round, round_score in self.round_scores.items():
             if not round_score.is_over():
