@@ -6,6 +6,7 @@ import argparse
 import sys
 import psycopg2
 from tornado.options import define, options, parse_command_line
+import sqlalchemy
 
 sys.path.insert(0, 'WebHandlers/')
 from handler import Handler
