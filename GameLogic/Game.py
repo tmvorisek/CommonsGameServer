@@ -41,3 +41,10 @@ class Game:
             player_score = self.score_board.get_player_score(player)
             print(f"Player {player}: {player_score}")
 
+    def get_player_score_boards(self):
+        player_scores = {}
+        for player in self.players:
+            player_score = self.score_board.get_score_board(player, self.game_rules)
+            player_scores[player] = player_score
+        return player_scores
+

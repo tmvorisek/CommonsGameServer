@@ -42,7 +42,7 @@ class CommonsIndex:
             earnings = self.get_police_yield(police_num)
         else:
             raise Exception(f"Invalid action type {action}")
-        return earnings
+        return round(earnings, 1)
 
     def get_sustain_yield(self, sustain_num):
         sustain_yield = self.index * self.game_rules.SUSTAIN_YIELD + sustain_num

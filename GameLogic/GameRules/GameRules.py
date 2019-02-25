@@ -12,6 +12,7 @@ class GameRules:
         self.SUSTAIN_YIELD = 10
         self.OVERHARVEST_YIELD = 20
         self.OVERHARVEST_FINE = 20
+        self.ACTIONS_ARE_HIDDEN = True
 
     def enact_rule(self, rule_proposal):
         rule_proposal.enact_rule(self)

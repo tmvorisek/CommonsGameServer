@@ -1,5 +1,6 @@
 from GameLogic.Game import Game
 from GameLogic.GameRules.GameRules import GameRules
+from GameLogic.GameRules.RuleProposals.ActionVisibilityProposal import ActionVisibilityProposal
 from GameLogic.GameRules.RuleProposals.OverharvestFineProposal import OverharvestFineProposal
 from GameLogic.PlayerActions import PlayerActions
 
@@ -16,8 +17,9 @@ class GameManager:
         current_round = 0
         game = Game(self.game_rules)
         fine = 1
+        is_visible = True
         for summit in range(self.summits):
-            print(f'Summit {summit}')
+            print(f'\nSummit {summit}')
             player_actions = self.get_random_player_actions()
             for game_round_num in range(self.rounds_per_summit):
                 round_actions = player_actions[game_round_num]
@@ -26,10 +28,16 @@ class GameManager:
                     game.add_player_action(player_id, action, current_round)
                 current_round += 1
             game.end_summit(self.rounds_per_summit)
-            game.print_score_board()
-            new_rule = OverharvestFineProposal(fine)
+            player_score_boards = game.get_player_score_boards()
+            for player, player_score_board in player_score_boards.items():
+                print(f"Player {player} Score Board")
+                print(player_score_board)
+            overharvest_fine_rule = OverharvestFineProposal(fine)
+            action_visible_rule = ActionVisibilityProposal(is_visible)
             fine *= 10
-            game.enact_new_rule(new_rule)
+            is_visible = not is_visible
+            game.enact_new_rule(overharvest_fine_rule)
+            game.enact_new_rule(action_visible_rule)
 
     def get_random_player_actions(self):
         game_actions = []
