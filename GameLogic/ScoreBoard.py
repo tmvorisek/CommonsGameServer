@@ -10,6 +10,8 @@ class ScoreBoard:
         self.round_scores = {}
 
     def get_round_score(self, game_round):
+        if game_round not in self.round_scores.keys():
+            self.round_scores[game_round] = RoundScore(game_round)
         return self.round_scores[game_round]
 
     def set_end_of_round_scores(self, game_round, commons_index):
