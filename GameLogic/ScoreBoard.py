@@ -3,8 +3,6 @@ from GameLogic.RoundScore import RoundScore
 
 class ScoreBoard:
 
-    STARTING_INDEX = 7
-
     def __init__(self, players):
         self.players = players
         self.round_scores = {}
