@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from GameLogic.CommonsIndex import CommonsIndex
+from GameLogic.GameRules.GameRules import GameRules
 from GameLogic.PlayerActions import PlayerActions
 
 
@@ -9,9 +10,11 @@ class TestCommonsIndex(unittest.TestCase):
 
     def setUp(self):
         self.start_index = 1.5
+        self.game_rules = GameRules()
+        self.game_rules.STARTING_INDEX = self.start_index
 
     def test_get_yield(self):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         sustain = 5
         restore = 4
         police = 2
@@ -21,17 +24,17 @@ class TestCommonsIndex(unittest.TestCase):
         mock_score.total_police = police
         # Test restore
         action = PlayerActions.RESTORE
-        expected_yield = -CommonsIndex.RESTORE_COST / restore
+        expected_yield = -self.game_rules.RESTORE_COST / restore
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test police
         action = PlayerActions.POLICE
-        expected_yield = -CommonsIndex.POLICE_COST / police
+        expected_yield = -self.game_rules.POLICE_COST / police
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test overharvest with police
         action = PlayerActions.OVERHARVEST
-        expected_yield = -CommonsIndex.OVERHARVEST_FINE
+        expected_yield = -self.game_rules.OVERHARVEST_FINE
         actual_yield = commons_index.get_yield(mock_score, action)
         self.assertEqual(expected_yield, actual_yield)
         # Test overharvest no police
@@ -47,7 +50,7 @@ class TestCommonsIndex(unittest.TestCase):
         self.assertEqual(expected_yield, actual_yield)
 
     def test_get_sustain_yield(self):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         # Test no sustain
         sustain_num = 0
         expected_yield = 15
@@ -60,7 +63,7 @@ class TestCommonsIndex(unittest.TestCase):
         self.assertEqual(expected_yield, actual_yield)
 
     def test_get_overharvest_yield(self):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         # No police or sustain
         expected_yield = 30
         actual_yield = commons_index.get_overharvest_yield(0, 0)
@@ -70,16 +73,16 @@ class TestCommonsIndex(unittest.TestCase):
         actual_yield = commons_index.get_overharvest_yield(3, 0)
         self.assertEqual(expected_yield, actual_yield)
         # One police
-        expected_yield = -CommonsIndex.OVERHARVEST_FINE
+        expected_yield = -self.game_rules.OVERHARVEST_FINE
         actual_yield = commons_index.get_overharvest_yield(1, 1)
         self.assertEqual(expected_yield, actual_yield)
         # Multiple police
-        expected_yield = -CommonsIndex.OVERHARVEST_FINE
+        expected_yield = -self.game_rules.OVERHARVEST_FINE
         actual_yield = commons_index.get_overharvest_yield(1, 3)
         self.assertEqual(expected_yield, actual_yield)
 
     def test_get_restore_yield(self):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         # No restore
         restore = 0
         expected = 0
@@ -87,17 +90,17 @@ class TestCommonsIndex(unittest.TestCase):
         self.assertEqual(expected, actual)
         # 1 restore
         restore = 1
-        expected = -CommonsIndex.RESTORE_COST
+        expected = -self.game_rules.RESTORE_COST
         actual = commons_index.get_restore_yield(restore)
         self.assertEqual(expected, actual)
         # Multiple restore
         restore = 4
-        expected = -CommonsIndex.RESTORE_COST / restore
+        expected = -self.game_rules.RESTORE_COST / restore
         actual = commons_index.get_restore_yield(restore)
         self.assertEqual(expected, actual)
 
     def test_get_police_yield(self):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         # No police
         police = 0
         expected = 0
@@ -105,12 +108,12 @@ class TestCommonsIndex(unittest.TestCase):
         self.assertEqual(expected, actual)
         # 1 police
         police = 1
-        expected = -CommonsIndex.POLICE_COST
+        expected = -self.game_rules.POLICE_COST
         actual = commons_index.get_police_yield(police)
         self.assertEqual(expected, actual)
         # Multiple police
         police = 3
-        expected = -CommonsIndex.POLICE_COST / 3
+        expected = -self.game_rules.POLICE_COST / 3
         actual = commons_index.get_police_yield(police)
         self.assertEqual(expected, actual)
 
@@ -129,7 +132,7 @@ class TestCommonsIndex(unittest.TestCase):
         self.do_multiple_updates_test()
 
     def do_multiple_updates_test(self):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         overharvest = 2
         restore = 3
         commons_index.update_index(overharvest, restore)
@@ -147,6 +150,6 @@ class TestCommonsIndex(unittest.TestCase):
         self.assertEqual(expected_index, actual_index)
 
     def get_index(self, overharvest, restore):
-        commons_index = CommonsIndex(self.start_index)
+        commons_index = CommonsIndex(self.game_rules)
         commons_index.update_index(overharvest, restore)
         return commons_index.index

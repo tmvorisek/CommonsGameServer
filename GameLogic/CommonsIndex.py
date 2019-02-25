@@ -3,16 +3,9 @@ from GameLogic.PlayerActions import PlayerActions
 
 class CommonsIndex:
 
-    OVERHARVEST_EFFECT = 0.1
-    RESTORATION_EFFECT = 0.1
-    RESTORE_COST = 6
-    POLICE_COST = 6
-    SUSTAIN_YIELD = 10
-    OVERHARVEST_YIELD = 20
-    OVERHARVEST_FINE = 20
-
-    def __init__(self, index):
-        self.index = index
+    def __init__(self, game_rules):
+        self.game_rules = game_rules
+        self.index = game_rules.STARTING_INDEX
 
     def update_index(self, overharvest_num, restore_num):
         """
@@ -22,9 +15,9 @@ class CommonsIndex:
         :param restore_num: Int
         """
         if overharvest_num > 0:
-            self.index -= overharvest_num * self.OVERHARVEST_EFFECT
+            self.index -= overharvest_num * self.game_rules.OVERHARVEST_EFFECT
         elif restore_num > 0:
-            self.index += restore_num * self.RESTORATION_EFFECT
+            self.index += restore_num * self.game_rules.RESTORATION_EFFECT
         self.index = max(0, self.index)
 
     def get_yield(self, round_score, action):
@@ -52,23 +45,23 @@ class CommonsIndex:
         return earnings
 
     def get_sustain_yield(self, sustain_num):
-        sustain_yield = self.index * self.SUSTAIN_YIELD + sustain_num
+        sustain_yield = self.index * self.game_rules.SUSTAIN_YIELD + sustain_num
         return sustain_yield
 
     def get_overharvest_yield(self, sustain_num, police_num):
         if police_num > 0:
-            return -self.OVERHARVEST_FINE
+            return -self.game_rules.OVERHARVEST_FINE
         else:
-            overharvest_yield = self.index * self.OVERHARVEST_YIELD + sustain_num
+            overharvest_yield = self.index * self.game_rules.OVERHARVEST_YIELD + sustain_num
             return overharvest_yield
 
     def get_restore_yield(self, restore_num):
         if restore_num == 0:
             return 0
-        return -self.RESTORE_COST / restore_num
+        return -self.game_rules.RESTORE_COST / restore_num
 
     def get_police_yield(self, police_num):
         if police_num == 0:
             return 0
-        return -self.POLICE_COST / police_num
+        return -self.game_rules.POLICE_COST / police_num
 

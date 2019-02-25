@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from GameLogic.Game import Game
+from GameLogic.GameRules.GameRules import GameRules
 
 
 class TestGame(unittest.TestCase):

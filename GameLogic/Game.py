@@ -4,19 +4,19 @@ from GameLogic.ScoreBoard import ScoreBoard
 
 class Game:
 
-    START_INDEX = 7.0
-
-    def __init__(self, num_players):
-        self.players = [None] * num_players
-        for player_num in range(num_players):
-            self.players[player_num] = player_num
+    def __init__(self, game_rules):
+        self.game_rules = game_rules
+        self.players = [player for player in range(game_rules.NUM_PLAYERS)]
         self.score_board = ScoreBoard(self.players)
         self.current_round = 0
-        self.commons_index = CommonsIndex(self.START_INDEX)
+        self.commons_index = CommonsIndex(self.game_rules)
 
     def end_summit(self, num_rounds):
         for _ in range(num_rounds):
             self.play_to_next_round()
+
+    def enact_new_rule(self, rule_proposal):
+        self.game_rules.enact_rule(rule_proposal)
 
     def play_to_next_round(self):
         self.update_score_board()
