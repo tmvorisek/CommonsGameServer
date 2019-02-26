@@ -3,13 +3,13 @@ from GameLogic.RoundScore import RoundScore
 
 class ScoreBoard:
 
-    STARTING_INDEX = 7
-
     def __init__(self, players):
         self.players = players
         self.round_scores = {}
 
     def get_round_score(self, game_round):
+        if game_round not in self.round_scores.keys():
+            self.round_scores[game_round] = RoundScore(game_round)
         return self.round_scores[game_round]
 
     def set_end_of_round_scores(self, game_round, commons_index):
@@ -32,4 +32,19 @@ class ScoreBoard:
             player_action = round_score.get_player_action(player_id)
             player_score = round_score.get_player_score(player_id)
             score_board[player_id].append((round_num, player_action, player_score))
+        return score_board
+
+    def get_score_board(self, player_id, game_rules):
+        score_board = {}
+        for game_round, round_score in self.round_scores.items():
+            for player in self.players:
+                player_action = round_score.get_player_action(player_id)
+                player_score = round_score.get_player_score(player_id)
+                if game_round not in score_board.keys():
+                    score_board[game_round] = []
+                if game_rules.ACTIONS_ARE_HIDDEN and player != player_id:
+                    score = (player, '-', '-')
+                else:
+                    score = (player, player_action, player_score)
+                score_board[game_round].append(score)
         return score_board
