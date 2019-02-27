@@ -7,6 +7,8 @@ import sys
 import psycopg2
 from tornado.options import define, options, parse_command_line
 
+import os
+
 sys.path.insert(0, 'WebHandlers/')
 from handler import Handler
 
@@ -34,18 +36,21 @@ def broadcast(obj):
 
 class CssHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
-    def get(self):
-        self.render("web/index.css")
+    def get(self, rules):
+        self.render("Foundation/css/" + rules)
+        # self.render("web/index.css")
 
 class JsHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
-    def get(self):
-        self.render("web/commonsGame.js")
+    def get(self, script):
+        self.render("Foundation/js/" + script)
+        # self.render("web/commonsGame.js")
 
 class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        self.render("web/index.html")
+        self.render("Foundation/test_site.html")
+        # self.render("web/index.html")
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -63,10 +68,12 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):        
         msg = json.loads(message);
-        if msg['type'] == 'connect':
-            self.handleConnection(msg)
+        if 'type' not in msg:
+            return
         elif msg['type'] == 'chat':
             self.handleChat(msg)
+        elif msg['type'] == 'connect':
+            self.handleConnection(msg)
         elif msg['type'] == 'delete':
             cursor.execute("DELETE FROM player WHERE id = %s", (self.id,))
             self.write_message(json.dumps({"name":"Commons", "text":"You have died of dysentery.", "type":"chat"}))
@@ -78,7 +85,6 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         cursor.execute("SELECT player_id FROM login WHERE player_id = %s;", (self.id,))
         if cursor.rowcount > 1:
             cursor.execute("UPDATE login SET logout_time = current_timestamp WHERE player_id = %s", (self.id,))
-
         if self.id in clients:
             del clients[self.id]
         conn.commit()
@@ -133,9 +139,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             cursor.execute("INSERT INTO move (player_id, game_id) VALUES (%s,%s)", (self.id, self.game_id))
 
 app = tornado.web.Application([
-    (r'/*', IndexHandler),
-    (r'/js', JsHandler),
-    (r'/css', CssHandler),
+    (r'/', IndexHandler),
+    (r'/js/(.*)', JsHandler),
+    (r'/css/(.*)', CssHandler),
     (r'/ws', WebSocketHandler),
 ])
 
