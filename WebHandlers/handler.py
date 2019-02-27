@@ -1,4 +1,6 @@
-class handler():
+import sqlalchemy
+
+class Handler():
     def __init__(self, cursor, params = {}):
         self.cursor = cursor
         
