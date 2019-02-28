@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS move (
 );
 
 CREATE TABLE IF NOT EXISTS login (
-    player_id INT NOT NULL REFERENCES player(id) ON DELETE CASCADE,
+    id INT NOT NULL REFERENCES player(id) ON DELETE CASCADE,
     login_time TIMESTAMP DEFAULT current_timestamp,
     logout_time TIMESTAMP
 );
