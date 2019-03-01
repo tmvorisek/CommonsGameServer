@@ -22,7 +22,7 @@ clients = dict()
 # Gon keep the db connection global as heck.
 conn = psycopg2.connect(database = "commons", 
                             user = "postgres", 
-                        password = "pass123", 
+                        password = "pass123",
                             host = "127.0.0.1", 
                             port = "5432")
 cursor = conn.cursor()
@@ -33,12 +33,6 @@ def broadcast(obj):
     connect_message = json.dumps(obj)
     for c in clients:
         clients[c]["object"].write_message(connect_message)
-
-class CssHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
-    def get(self, rules):
-        self.render("Foundation/css/" + rules)
-        # self.render("web/index.css")
 
 class JsHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
@@ -138,12 +132,14 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         if self.game_id != 0:
             cursor.execute("INSERT INTO move (player_id, game_id) VALUES (%s,%s)", (self.id, self.game_id))
 
+settings = {'debug': True, 
+            'static_path': os.path.join(os.path.dirname(__file__), "Foundation")}
+
 app = tornado.web.Application([
     (r'/', IndexHandler),
     (r'/js/(.*)', JsHandler),
-    (r'/css/(.*)', CssHandler),
     (r'/ws', WebSocketHandler),
-])
+], **settings)
 
 if __name__ == '__main__':
     parse_command_line()
