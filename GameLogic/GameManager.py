@@ -17,7 +17,7 @@ class GameManager:
         current_round = 0
         game = Game(self.game_rules)
         fine = 1
-        is_visible = True
+        is_visible = False
         for summit in range(self.summits):
             print(f'\nSummit {summit}')
             player_actions = self.get_random_player_actions()
@@ -30,8 +30,12 @@ class GameManager:
             game.end_summit(self.rounds_per_summit)
             player_score_boards = game.get_player_score_boards()
             for player, player_score_board in player_score_boards.items():
-                print(f"Player {player} Score Board")
-                print(player_score_board)
+                as_str = f"Player {player} Score Board"
+                for game_round, player_score in player_score_board.items():
+                    if game_round % self.rounds_per_summit == 0:
+                        as_str += f'\n\tSummit {int(game_round / self.rounds_per_summit)}'
+                    as_str += f"\n\t\tRound {game_round}: {player_score}"
+                print(as_str)
             overharvest_fine_rule = OverharvestFineProposal(fine)
             action_visible_rule = ActionVisibilityProposal(is_visible)
             fine *= 10
