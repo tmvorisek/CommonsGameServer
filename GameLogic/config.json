@@ -1,0 +1,14 @@
+{
+  "number_of_players": 3,
+  "number_of_summits": 4,
+  "rounds_per_summit": 3,
+  "starting_index": 7.0,
+  "overharvest_index_effect": 0.1,
+  "restoration_index_effect": 0.1,
+  "restoration_cost": 6.0,
+  "police_cost": 6.0,
+  "base_sustain_yield": 10.0,
+  "base_overharvest_yield": 20.0,
+  "overharvest_fine": 20,
+  "actions_are_hidden": false
+}

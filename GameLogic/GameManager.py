@@ -7,11 +7,11 @@ from GameLogic.PlayerActions import PlayerActions
 
 class GameManager:
 
-    def __init__(self, summits, rounds_per_summit, num_players):
-        self.summits = summits
-        self.rounds_per_summit = rounds_per_summit
-        self.num_players = num_players
-        self.game_rules = GameRules(summits, rounds_per_summit, num_players)
+    def __init__(self, config_file_name):
+        self.game_rules = GameRules(config_file_name)
+        self.summits = self.game_rules.NUM_SUMMITS
+        self.rounds_per_summit = self.game_rules.ROUNDS_PER_SUMMIT
+        self.num_players = self.game_rules.NUM_PLAYERS
 
     def start_game(self):
         current_round = 0
