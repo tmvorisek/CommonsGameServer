@@ -1,3 +1,4 @@
+from GameLogic.PlayerActions import PlayerActions
 from GameLogic.RoundScore import RoundScore
 
 
@@ -6,6 +7,7 @@ class ScoreBoard:
     def __init__(self, players):
         self.players = players
         self.round_scores = {}
+        self.hidden_rounds = {}
 
     def get_round_score(self, game_round):
         if game_round not in self.round_scores.keys():
@@ -38,13 +40,22 @@ class ScoreBoard:
         score_board = {}
         for game_round, round_score in self.round_scores.items():
             for player in self.players:
-                player_action = round_score.get_player_action(player_id)
-                player_score = round_score.get_player_score(player_id)
-                if game_round not in score_board.keys():
-                    score_board[game_round] = []
-                if game_rules.ACTIONS_ARE_HIDDEN and player != player_id:
-                    score = (player, '-', '-')
+                player_action = round_score.get_player_action(player)
+                player_score = round_score.get_player_score(player)
+                if game_round not in self.hidden_rounds.keys():
+                    self.hidden_rounds[game_round] = game_rules.ACTIONS_ARE_HIDDEN
+                if self.hidden_rounds[game_round] and player != player_id:
+                    score = self.get_hidden_score(player, player_action, player_score)
                 else:
                     score = (player, player_action, player_score)
+                if game_round not in score_board.keys():
+                    score_board[game_round] = []
                 score_board[game_round].append(score)
         return score_board
+
+    def get_hidden_score(self, player, player_action, score):
+        if player_action == PlayerActions.OVERHARVEST and score < 0:
+            score = (player, player_action, score)
+        else:
+            score = (player, '-', '-')
+        return score

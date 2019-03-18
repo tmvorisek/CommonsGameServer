@@ -9,18 +9,19 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Web Page</title>
-    <link rel="stylesheet" href="css/foundation.css">
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" type="text/css" href="{{static_url('css/app.css')}}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{static_url('css/foundation.css')}}"> -->
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/css/foundation.css">
 </head>
 <body>
     <div class="grid-container">
         <div class="grid-padding-x">
-            <div class="large-12 cell">
-                <h1>Commons Game</h1>
+            <div class="large-12 row">
+                <h1>UAF NRM Commons Game</h1>
             </div>
         </div>
         <div class="grid-x grid-padding-x">
-            <div class="large-12 cell">
+            <div class="large-12 row">
                 <div class="callout">
                     <p><b>Randy:</b> Is this minecraft?</p>
                     <p><b>Bill:</b>What's the purpose of this game?</p>
@@ -34,24 +35,43 @@
                     <br />
                 </div>
             </div>
-            <div class="large-12 large-12 cell">
-                <h5>Pick your poison:</h5>
-                <p>
-                    <!--
-                    This is temporary, in order to change the button colors
-                    /names, I simply will need to modify a tiny bit of the css
-                    files, but that won't be hard. That being said, the default colors
-                    pretty much work anyway.
-                -->
-                    <a href="#" class="button">This is the sound of the police</a>
-                    <a href="#" class="success button">You are a good person</a>
-                    <a href="#" class="alert button">You should feel ashamed</a>
-                    <a href="#" class="warning button">meh</a>
-                </p>
+        </div>
+        <div class = "row">
+            <div class="small-2 columns">
+                <input id="name-input" type="text">
+            </div>
+            <div class="small-9 columns">
+                <input id="chat-input" type="text">
+            </div>
+            <div class="small-1 columns">
+                <a href="#" class="button">Submit</a>
             </div>
         </div>
+        <div class="large-12 row">
+            <h5>Pick your poison:</h5>
+            <p>
+                <!--
+                This is temporary, in order to change the button colors
+                /names, I simply will need to modify a tiny bit of the css
+                files, but that won't be hard. That being said, the default colors
+                pretty much work anyway.
+            -->
+                <div class="small-3 columns">
+                    <a href="#" class="button" style="width:100%;">This is the sound of the police</a>
+                </div>
+                <div class="small-3 columns">
+                    <a href="#" class="success button" style="width:100%;">You are a good person</a>
+                </div>
+                <div class="small-3 columns">
+                    <a href="#" class="alert button" style="width:100%;">You should feel ashamed</a>
+                </div>
+                <div class="small-3 columns">
+                    <a href="#" class="warning button" style="width:100%;">meh</a>
+                </div>
+            </p>
+        </div>
         <div class="grid-padding-x">
-            <div class="large-12 cell">
+            <div class="large-12 row">
                 <div class="callout">
                     Commons Rating - 1 billion
                     <p>What ever strategy you are using, stick with it. <p/>
