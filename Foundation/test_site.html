@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     A test page mostly to demonstrate that something
     happened for the next standup.
 -->
@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Web Page</title>
     <link rel="stylesheet" type="text/css" href="{{static_url('css/app.css')}}">
-    <!-- <link rel="stylesheet" type="text/css" href="{{static_url('css/foundation.css')}}"> -->
-    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/css/foundation.css">
+    <link rel="stylesheet" type="text/css" href="{{static_url('css/foundation.css')}}">
+    <!----<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.0.1/css/foundation.css">-->
 </head>
 <body>
     <div class="grid-container">
@@ -23,20 +23,43 @@
         <div class="grid-x grid-padding-x">
             <div class="large-12 row">
                 <div class="callout">
-                    <p><b>Randy:</b> Is this minecraft?</p>
-                    <p><b>Bill:</b>What's the purpose of this game?</p>
-                    <p><b>Karen:</b> Can it run crysis? </p>
-                    <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+                    <div style="height:300px; overflow-y:scroll;">
+                        <p><b>Randy:</b> Is this minecraft?</p>
+                        <p><b>Bill:</b>What's the purpose of this game?</p>
+                        <p><b>Karen:</b> Can it run crysis? </p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                        <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class = "row">
+        <div class="row">
             <div class="small-2 columns">
                 <input id="name-input" type="text">
             </div>
@@ -48,6 +71,16 @@
             </div>
         </div>
         <div class="large-12 row">
+            <div class="large reveal" id="exampleModal1" data-reveal data-h-offset="150">
+                <h1>Awesome. I Have It.</h1>
+                <p class="lead">Your couch. It is mine.</p>
+                <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <a href="#" data-open="exampleModal1">Click me for a modal</a>
+
             <h5>Pick your poison:</h5>
             <p>
                 <!--
@@ -57,24 +90,30 @@
                 pretty much work anyway.
             -->
                 <div class="small-3 columns">
-                    <a href="#" class="button" style="width:100%;">This is the sound of the police</a>
+
+                    <a href="#" class="button" data-tooltip tabindex="1" title="Police Action"
+                       data-position="bottom" data-alignment="left" style="width:100%;">Police</a>
                 </div>
                 <div class="small-3 columns">
-                    <a href="#" class="success button" style="width:100%;">You are a good person</a>
+                    <a href="#" class="success button" data-tooltip tabindex="1" title="Sustain Yield"
+                       data-position="bottom" data-alignment="left" style="width:100%;">Sustain</a>
                 </div>
                 <div class="small-3 columns">
-                    <a href="#" class="alert button" style="width:100%;">You should feel ashamed</a>
+                    <a href="#" class="alert button" data-tooltip tabindex="1" title="Over use"
+                       data-position="bottom" data-alignment="left" style="width:100%;">Overfish</a>
                 </div>
                 <div class="small-3 columns">
-                    <a href="#" class="warning button" style="width:100%;">meh</a>
+                    <a href="#" class="warning button" data-tooltip tabindex="1" title="Fix land"
+                       data-position="bottom" data-alignment="left" style="width:100%;">Fix land</a>
                 </div>
             </p>
         </div>
+
         <div class="grid-padding-x">
             <div class="large-12 row">
                 <div class="callout">
                     Commons Rating - 1 billion
-                    <p>What ever strategy you are using, stick with it. <p/>
+                    <p>What ever strategy you are using, stick with it. <p />
                 </div>
             </div>
         </div>
