@@ -18,26 +18,15 @@ function addChat(name, message)
 
 function webSocketConnect() {
     ws = new WebSocket("ws://localhost:8888/ws?Id="+id_number);
-    // var name_entry = document.getElementById("nameEntry");
-    // var name_entry = document.getElementById("nameEntry");
-    // var pass_entry = document.getElementById("passEntry");
+    var name_entry = document.getElementById("name-input");
+    var chat_entry = document.getElementById("chat-input");
     ws.onopen = function() {
-        name = name_entry.value;
-        sendObject({type:"connect", name:name_entry.value, pass:pass_entry.value});
+        sendObject({type:"connect"});
     };
     ws.onmessage = function (evt) { 
         var msg = JSON.parse(evt.data);
         if (msg["type"] == "connect"){
-            addChat("Commons", "User " + msg["name"] + " Connected");
-            if (msg["name"] == name){
-                var name_entry = document.getElementById("nameEntry");
-                var pass_entry = document.getElementById("passEntry");
-                var auth = document.getElementById("authenticate");
-                name_entry.parentElement.removeChild(name_entry);
-                pass_entry.parentElement.removeChild(pass_entry);
-                auth.parentElement.removeChild(auth);
-            }
-
+            addChat("Commons", "User " + msg["number"] + " Connected");
         }
         else if (msg["type"] == "chat"){
             addChat(msg["name"], msg["text"]);
@@ -57,8 +46,10 @@ function webSocketConnect() {
 
 function sendChat() {
     var chatEntry = document.getElementById("chat-input");
+    var nameEntry = document.getElementById("name-input");
     var chatMessage = {
         text: chatEntry.value,
+        name: nameEntry.value,
         type: "chat",
         id: id_number
     };
