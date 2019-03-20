@@ -4,7 +4,7 @@ import tornado.websocket
 import json
 import argparse
 import sys
-import psycopg2
+# import psycopg2
 from tornado.options import define, options, parse_command_line
 
 import os
@@ -20,14 +20,18 @@ define("port", default=8888, help="run on the given port", type=int)
 clients = dict()
 
 # Gon keep the db connection global as heck.
-conn = psycopg2.connect(database = "commons", 
-                            user = "postgres", 
-                        password = "pass123",
-                            host = "127.0.0.1", 
-                            port = "5432")
-cursor = conn.cursor()
+# conn = psycopg2.connect(database = "commons", 
+                            # user = "postgres", 
+                        # password = "pass123",
+                            # host = "127.0.0.1", 
+                            # port = "5432")
+# cursor = conn.cursor()
 
+# Gon parse arguments too, y'all.
 parser = argparse.ArgumentParser(description='Commons game public python server.')
+parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                    help='an integer for the accumulator')
+args = parser.parse_args()
 
 def broadcast(obj):
     connect_message = json.dumps(obj)
@@ -35,13 +39,13 @@ def broadcast(obj):
         clients[c]["object"].write_message(connect_message)
 
 class JsHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
+    # @tornado.web.asynchronous
     def get(self, script):
         self.render("Foundation/js/" + script)
         # self.render("web/commonsGame.js")
 
 class IndexHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
+    # @tornado.web.asynchronous
     def get(self):
         self.render("Foundation/test_site.html")
         # self.render("web/index.html")
@@ -52,85 +56,37 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     player2 = 0
     game_id = 0
 
-    handler = Handler(cursor)
+    # handler = Handler(cursor)
 
-    def open(self, *args):
-        # self.id = self.get_argument("Id")
-        self.stream.set_nodelay(True)
-        self.id = -1
-        # clients[self.id] = {"id": self.id, "object": self}
 
     def on_message(self, message):        
         msg = json.loads(message);
         if 'type' not in msg:
             return
         elif msg['type'] == 'chat':
+            if len(msg['name']) == 0 or len(msg['text']) == 0:
+                return
             self.handleChat(msg)
         elif msg['type'] == 'connect':
             self.handleConnection(msg)
-        elif msg['type'] == 'delete':
-            cursor.execute("DELETE FROM player WHERE id = %s", (self.id,))
-            self.write_message(json.dumps({"name":"Commons", "text":"You have died of dysentery.", "type":"chat"}))
-            self.close()
-        elif msg['type'] == 'move':
-            self.handleMove()
+
+    def open(self, *args):
+        self.id = len(clients.keys())
+        self.handler.open(args, self.id)
         
     def on_close(self):
-        cursor.execute("SELECT player_id FROM login WHERE player_id = %s;", (self.id,))
-        if cursor.rowcount > 1:
-            cursor.execute("UPDATE login SET logout_time = current_timestamp WHERE player_id = %s", (self.id,))
-        if self.id in clients:
-            del clients[self.id]
-        conn.commit()
+        self.handler.close(self.id)
 
     def handleConnection(self, msg):
-        cursor.execute("SELECT id, name, password FROM player WHERE name LIKE %s;", (msg['name'],))
-        details = cursor.fetchone()
-        if cursor.rowcount < 1:
-            msg['name'] = msg['name'].replace("<", "")
-            if 255 > len(msg['name']) > 0 and 255 > len(str(msg['pass'])) > 0:
-                cursor.execute("INSERT INTO player (name, password) VALUES (%s, %s);",
-                    (msg['name'], msg['pass']))            
-                conn.commit()
-                cursor.execute("SELECT id, name, password FROM player WHERE name = %s;", 
-                    (msg['name'],))
-                details = cursor.fetchone()
-        elif msg['pass'] != details[2]:
-            clients[-1] = {"object":self}
-            return 
-        self.id = details[0]
-        clients[self.id] = {"object": self, "name":details[1], "id":details[0]}
-        broadcast({"type":"connect", "name":details[1]})
-        cursor.execute("INSERT INTO login (player_id) VALUES (%s)", (self.id,))
-
-        if len(clients) == 1:
-            cursor.execute("INSERT INTO game (player_one_id) VALUES (%s)", (self.id,))
-            conn.commit()
-        elif len(clients) == 2:
-            cursor.execute("SELECT id FROM game WHERE player_two_id IS NULL;")
-            if cursor.rowcount > 0:
-                clients[self.id]["game_id"] = cursor.fetchone()[0]
-                broadcast({"name":"", "text":"<h3>GAME BEGUN.<h3>", "type":"chat"})
-                cursor.execute("UPDATE game SET player_two_id = %s WHERE id = %s", 
-                    (self.id, clients[self.id]["game_id"]))
-
-        cursor.execute("""SELECT player.name, text, time 
-                            FROM chat 
-                            INNER JOIN player ON player.id = chat.player_id 
-                            ORDER BY time ASC LIMIT 1000;""")
-        chat_log = cursor.fetchall()
-        for log in chat_log:
-            self.write_message(json.dumps({"name":log[0], "text":log[1], "type":"chat"}))
+        self.handler.connection(msg)
 
     def handleChat(self, msg):
         msg["player_id"] = self.id
-        msg["name"] = clients[self.id]["name"]
-        self.handler.handle_chat(msg)
+        self.handler.chat(msg)
         broadcast(msg)
 
     def handleMove(self):
-        if self.game_id != 0:
-            cursor.execute("INSERT INTO move (player_id, game_id) VALUES (%s,%s)", (self.id, self.game_id))
+        pass
 
 settings = {'debug': True, 
             'static_path': os.path.join(os.path.dirname(__file__), "Foundation")}
@@ -144,5 +100,5 @@ app = tornado.web.Application([
 if __name__ == '__main__':
     parse_command_line()
     app.listen(options.port)
-    print "Running server at http://localhost:%i" % (options.port)
+    print("Running server at http://localhost:"+str((options.port)))
     tornado.ioloop.IOLoop.instance().start()
