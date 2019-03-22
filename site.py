@@ -9,8 +9,8 @@ from tornado.options import define, options, parse_command_line
 
 import os
 
-sys.path.insert(0, 'WebHandlers/')
-from handler import Handler
+# sys.path.insert(0, 'WebHandlers/')
+from WebHandlers import handler
 
 
 
@@ -29,9 +29,11 @@ clients = dict()
 
 # Gon parse arguments too, y'all.
 parser = argparse.ArgumentParser(description='Commons game public python server.')
-parser.add_argument('integers', metavar='N', type=int, nargs='+',
-                    help='an integer for the accumulator')
+parser.add_argument('--players', metavar='N', type=int, nargs=1,
+                    help='Number of players expected')
 args = parser.parse_args()
+message_handler = handler.Handler(args.players[0])
+
 
 def broadcast(obj):
     connect_message = json.dumps(obj)
@@ -39,25 +41,22 @@ def broadcast(obj):
         clients[c]["object"].write_message(connect_message)
 
 class JsHandler(tornado.web.RequestHandler):
-    # @tornado.web.asynchronous
     def get(self, script):
         self.render("Foundation/js/" + script)
-        # self.render("web/commonsGame.js")
 
 class IndexHandler(tornado.web.RequestHandler):
-    # @tornado.web.asynchronous
     def get(self):
+        cookie = self.get_secure_cookie("commons_pass").decode()
         self.render("Foundation/test_site.html")
-        # self.render("web/index.html")
+
+class LinkHandler(tornado.web.RequestHandler):
+    def get(self, pass_string):
+        self.set_secure_cookie("commons_pass", pass_string.encode(), expires_days=1)
+        self.redirect("/")
+
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    player1 = 0
-    player2 = 0
-    game_id = 0
-
-    # handler = Handler(cursor)
-
 
     def on_message(self, message):        
         msg = json.loads(message);
@@ -72,33 +71,36 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def open(self, *args):
         self.id = len(clients.keys())
-        self.handler.open(args, self.id)
+        message_handler.open(args, self.id)
         
     def on_close(self):
-        self.handler.close(self.id)
+        message_handler.close(self.id)
 
     def handleConnection(self, msg):
-        self.handler.connection(msg)
+        message_handler.connection(msg)
 
     def handleChat(self, msg):
         msg["player_id"] = self.id
-        self.handler.chat(msg)
+        message_handler.chat(msg)
         broadcast(msg)
 
     def handleMove(self):
         pass
 
 settings = {'debug': True, 
+            'cookie_secret': "Super Secret, don't get haxxed",
             'static_path': os.path.join(os.path.dirname(__file__), "Foundation")}
 
 app = tornado.web.Application([
     (r'/', IndexHandler),
+    (r'/user/(.*)', LinkHandler),
     (r'/js/(.*)', JsHandler),
     (r'/ws', WebSocketHandler),
 ], **settings)
 
+
 if __name__ == '__main__':
-    parse_command_line()
+    # parse_command_line()
     app.listen(options.port)
     print("Running server at http://localhost:"+str((options.port)))
     tornado.ioloop.IOLoop.instance().start()

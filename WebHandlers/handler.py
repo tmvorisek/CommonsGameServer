@@ -1,8 +1,30 @@
-from sqlalchemy import insert, update
+from sqlalchemy import insert, update, create_engine
+
+engine = create_engine('postgresql://postgres:pass123@localhost/commons')
 
 class Handler():
-    def __init__(self, cursor, params = {}):
-        self.cursor = cursor
+    def __init__(self, player_count, params = {}):
+        games_arr = self.compute_game_players_counts(player_count)
+
+
+    def compute_game_players_counts(self, player_count):
+        rem = player_count % 8
+        groups = int(player_count / 8)
+        games = []
+        for i in range(0,groups):
+            games.append(8)
+        if (rem < 4):
+            i = 0
+            while rem > 0:
+                games[i] += 1
+                rem -= 1
+                i += 1
+                if i >= len(games):
+                    i = 0
+        elif (rem >= 4):
+            games.append(rem)
+
+        return games
 
     def open(self,msg):
         # self.id = self.get_argument("Id")
