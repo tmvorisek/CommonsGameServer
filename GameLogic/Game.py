@@ -39,5 +39,9 @@ class Game:
             player_scores[player] = player_score
         return player_scores
 
+    def get_player_score_board(self, player_id):
+        player_score = self.score_board.get_score_board(player_id, self.game_rules)
+        return player_score
+
     def enact_new_rule(self, rule_proposal):
         self.game_rules.enact_rule(rule_proposal)
