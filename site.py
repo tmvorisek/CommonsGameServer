@@ -25,7 +25,6 @@ clients = dict()
                         # password = "pass123",
                             # host = "127.0.0.1", 
                             # port = "5432")
-# cursor = conn.cursor()
 
 # Gon parse arguments too, y'all.
 parser = argparse.ArgumentParser(description='Commons game public python server.')
@@ -70,8 +69,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             self.handleConnection(msg)
 
     def open(self, *args):
+        self.stream.set_nodelay(True)
         self.id = len(clients.keys())
-        message_handler.open(args, self.id)
+        message_handler.open(self.id)
+        clients[self.id] = {"id": self.id, "object": self}
         
     def on_close(self):
         message_handler.close(self.id)

@@ -1,10 +1,11 @@
-from sqlalchemy import insert, update, create_engine
-
-engine = create_engine('postgresql://postgres:pass123@localhost/commons')
+from database import DBManager
 
 class Handler():
     def __init__(self, player_count, params = {}):
         games_arr = self.compute_game_players_counts(player_count)
+        db = DBManager()
+        db.create_games(games_arr)
+
 
 
     def compute_game_players_counts(self, player_count):
@@ -24,15 +25,15 @@ class Handler():
         elif (rem >= 4):
             games.append(rem)
 
+        print("Created Games with players counts: " + str(games))
         return games
 
     def open(self,msg):
-        # self.id = self.get_argument("Id")
-        self.stream.set_nodelay(True)
-        clients[self.id] = {"id": self.id, "object": self}
-        msg = json.dumps({"name":"commons", "number":str(self.id), "type":"connect"})
-        broadcast(msg)
-        cursor.execute("INSERT INTO player (round_id, name, worth, password) VALUES (%s,%s,%s,%s)", (2, "JohnnyQ", 0, "blah"))
+        pass
+        # clients[self.id] = {"id": self.id, "object": self}
+        # msg = json.dumps({"name":"commons", "number":str(self.id), "type":"connect"})
+        # broadcast(msg)
+        # cursor.execute("INSERT INTO player (round_id, name, worth, password) VALUES (%s,%s,%s,%s)", (2, "JohnnyQ", 0, "blah"))
     
     def close(self, id):
         pass
@@ -61,10 +62,6 @@ class Handler():
         if len(msg["text"]) > 0:
             msg["text"] = msg["text"].replace("<","")
 
-            self.cursor.execute(
-                """INSERT INTO chat (player_id, text, game_id)
-                    VALUES(%s,%s,1)""",
-                    (6, msg["text"]))
             return msg
         return {}
 

@@ -25,6 +25,7 @@ function webSocketConnect() {
     };
     ws.onmessage = function (evt) { 
         var msg = JSON.parse(evt.data);
+        console.log(msg)
         if (msg["type"] == "connect"){
             addChat("Commons", "User " + msg["number"] + " Connected");
         }
