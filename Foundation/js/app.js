@@ -18,8 +18,8 @@ function addChat(name, message)
 
 function webSocketConnect() {
     ws = new WebSocket("ws://localhost:8888/ws?Id="+id_number);
-    var name_entry = document.getElementById("name-input");
-    var chat_entry = document.getElementById("chat-input");
+    // var name_entry = document.getElementById("name-input");
+    // var chat_entry = document.getElementById("chat-input");
     ws.onopen = function() {
         sendObject({type:"connect"});
     };
@@ -36,7 +36,7 @@ function webSocketConnect() {
     ws.onclose = function() { 
 
     };
-    document.getElementById("chatEntry")
+    document.getElementById("chat-input")
         .addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
