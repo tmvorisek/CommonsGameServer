@@ -21,7 +21,6 @@ class DBManager():
             Column("name", String),
             Column("worth", Integer),
             Column("password", String))
-        print("hey man")
 
 
     def create_games(self, games_arr):

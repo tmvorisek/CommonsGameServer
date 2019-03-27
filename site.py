@@ -75,6 +75,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         clients[self.id] = {"id": self.id, "object": self}
         
     def on_close(self):
+        print("hey guys!")
         message_handler.close(self.id)
 
     def handleConnection(self, msg):
