@@ -31,188 +31,201 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-x grid-padding-x">
-                <div class="large-12 row">
-                    <div class="callout">
-                        <div style="height:300px; overflow-y:scroll;">
-                            <p><b>Randy:</b> Is this minecraft?</p>
-                            <p><b>Bill:</b>What's the purpose of this game?</p>
-                            <p><b>Karen:</b> Can it run crysis? </p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
-                            <p><b>Gl1tCh:</b>Who ever designed this website should feel ashamed.</p>
+
+            <div class="small-12 columns">
+                <div class="small-3 columns">
+                    <div class="row">
+                        <div class="callout" style="height:500px; overflow-y:scroll;font-size:15px">
+                            <p id="text_chat"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12">
+                            <div class="small-12 columns" style="font-size:15px">
+                                <input id="name-input" type="text" value="Name">
+                            </div>
+                            <div class="small-12 columns" style="font-size:15px">
+                                <input id="chat-input" type="text" value="Text">
+                            </div>
+                            <div class="small-12 columns">
+                                <a href="#" class="button" onclick=submit_text(document.getElementById('name-input').innerHtml,document.getElementById('chat-input').value)>Submit</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="small-2 columns">
-                    <input id="name-input" type="text">
-                </div>
+
+
                 <div class="small-9 columns">
-                    <input id="chat-input" type="text">
-                </div>
-                <div class="small-1 columns">
-                    <a href="#" class="button">Submit</a>
-                </div>
-            </div>
-            <div class="large-12 row">
-                <div class="large reveal" id="exampleModal1" data-reveal data-h-offset="150">
-                    <h1>Voting Booth</h1>
-                    <p class="lead">Pick one thing to vote on.</p>
+                    <div class="callout" style="height:300px; overflow-y:scroll;">
+                        <p>voting stuff goes here</p>
+                    </div>
+                    <div class="large-12 row">
+                        <div class="large reveal" id="exampleModal1" data-reveal data-h-offset="150">
+                            <h1>Voting Booth</h1>
+                            <p class="lead">Pick one thing to vote on.</p>
 
-                    <button class="close-button" data-close aria-label="Close modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="large reveal" id="Help" data-reveal data-h-offset="150">
-                    <h1>Help Page</h1>
-                    <p class="lead">Rules</p>
+                            <button class="close-button" data-close aria-label="Close modal" type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="large reveal" id="Help" data-reveal data-h-offset="150">
+                            <h1>Help Page</h1>
+                            <p class="lead">Rules</p>
 
-                    <button class="close-button" data-close aria-label="Close modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="large reveal" id="About" data-reveal data-h-offset="150">
-                    <h1>About</h1>
-                    <p class="lead">About Page</p>
+                            <button class="close-button" data-close aria-label="Close modal" type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="large reveal" id="About" data-reveal data-h-offset="150">
+                            <h1>About</h1>
+                            <p class="lead">About Page</p>
 
-                    <button class="close-button" data-close aria-label="Close modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                            <button class="close-button" data-close aria-label="Close modal" type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-                <h5>Moves:</h5>
-                <p>
-                    <!--
+                        <h5>Moves:</h5>
+                        <p>
+                            <!--
             This is temporary, in order to change the button colors
             /names, I simply will need to modify a tiny bit of the css
             files, but that won't be hard. That being said, the default colors
             pretty much work anyway.
             -->
-                    <div class="small-9">
-                        <div class="stacked-for-small button-group">
-                            <div class="small-3 columns">
+                            <div class="small-12">
+                                <div class="stacked-for-small button-group">
+                                    <div class="small-2 columns">
 
-                                <a href="#" class="button" data-tooltip tabindex="1" title="Police Action"
-                                   data-position="bottom" data-alignment="left" style="width:100%;">Police</a>
+                                        <a href="#" class="button" data-tooltip tabindex="1" title="Police Action"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=change_button_color(1)>Police</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" class="success button" data-tooltip tabindex="1" title="Sustain Yield"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=change_button_color(2)>Sustain</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" class="alert button" data-tooltip tabindex="1" title="Over use"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=change_button_color(3)>Overfish</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" class="warning button" data-tooltip tabindex="1" title="Fix land"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=change_button_color(4)>Fix land</a>
+                                    </div>
+
+                                    <div class="small-2 columns">
+
+                                    </div>
+
+                                    <div class="small-2 columns">
+                                        <a href="#" class="secondary button" data-tooltip tabindex="1" title="Submit"
+                                           data-position="bottom" data-alignment="left" style="width:100%;">Submit</a>
+
+                                        <!---<a href="#" class="button_type" data-tooltip tabindex="1" title="Submit"
+       data-position="bottom" data-alignment="left" style="width:100%;">Submit</a> -->
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="small-3 columns">
-                                <a href="#" class="success button" data-tooltip tabindex="1" title="Sustain Yield"
-                                   data-position="bottom" data-alignment="left" style="width:100%;">Sustain</a>
-                            </div>
-                            <div class="small-3 columns">
-                                <a href="#" class="alert button" data-tooltip tabindex="1" title="Over use"
-                                   data-position="bottom" data-alignment="left" style="width:100%;">Overfish</a>
-                            </div>
-                            <div class="small-3 columns">
-                                <a href="#" class="warning button" data-tooltip tabindex="1" title="Fix land"
-                                   data-position="bottom" data-alignment="left" style="width:100%;">Fix land</a>
+                        </p>
+                    </div><div class="grid-padding-x">
+                        <div class="large-12 row">
+                            <div class="callout">
+                                <p>Commons Rating:</p>
                             </div>
                         </div>
-
                     </div>
-                </p>
-            </div>
-
-            <div class="grid-padding-x">
-                <div class="large-12 row">
-                    <div class="callout">
-                        <p>Commons Rating:</p>
+                    <div class="row">
+                        <div class="columns">
+                            <h2>Past moves</h2>
+                            <div class="callout" height="800px" style="overflow:auto">
+                                <table class="stack">
+                                    <thead>
+                                        <tr>
+                                            <th width="150px">Turns</th>
+                                            <th width="150">P1</th>
+                                            <th width="150">P2</th>
+                                            <th width="150">P3</th>
+                                            <th width="150">P4</th>
+                                            <th width="150">P5</th>
+                                            <th width="150">P6</th>
+                                            <th width="150">P7</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Turn 1</td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myred"></div></td>
+                                            <td><div class="mybox mygreen"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Turn 2</td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myred"></div></td>
+                                            <td><div class="mybox mygreen"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Turn 3</td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myred"></div></td>
+                                            <td><div class="mybox mygreen"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myblue"></div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Turn 4</td>
+                                            <td><div class="mybox myblue"></div></td>
+                                            <td><div class="mybox myred"></div></td>
+                                            <td><div class="mybox mygreen"></div></td>
+                                            <td><div class="mybox myclear"></div></td>
+                                            <td><div class="mybox myred"></div></td>
+                                            <td><div class="mybox myclear"></div></td>
+                                            <td><div class="mybox myorange"></div></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
-            </div>
-            <div class="row">
-                <div class="columns">
-                    <h2>Past moves</h2>
-                    <div class="callout" height="800px" style="overflow:auto">
-                        <table class="stack">
-                            <thead>
-                                <tr>
-                                    <th width="150px">Turns</th>
-                                    <th width="150">P1</th>
-                                    <th width="150">P2</th>
-                                    <th width="150">P3</th>
-                                    <th width="150">P4</th>
-                                    <th width="150">P5</th>
-                                    <th width="150">P6</th>
-                                    <th width="150">P7</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Turn 1</td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myred"></div></td>
-                                    <td><div class="mybox mygreen"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Turn 2</td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myred"></div></td>
-                                    <td><div class="mybox mygreen"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Turn 3</td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myred"></div></td>
-                                    <td><div class="mybox mygreen"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myblue"></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Turn 4</td>
-                                    <td><div class="mybox myblue"></div></td>
-                                    <td><div class="mybox myred"></div></td>
-                                    <td><div class="mybox mygreen"></div></td>
-                                    <td><div class="mybox myclear"></div></td>
-                                    <td><div class="mybox myred"></div></td>
-                                    <td><div class="mybox myclear"></div></td>
-                                    <td><div class="mybox myorange"></div></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
+            </div>
         </div>
     </div>
+
+    
+    <script>
+        var my_cool_text = ""
+
+
+        function submit_text(name, text) {
+            my_cool_text += name;
+            my_cool_text += ":";
+            my_cool_text += text;
+            my_cool_text += "\n";
+            console.log("Function being called");
+            console.log(name + ": " + text);
+            document.getElementById("text_chat").innerText = my_cool_text;
+        }
+
+        function change_button_color(type) {
+            console.log("button Pressed:" + type);
+           // document.getElementById("button_type").innerHTML = "warning button";
+        }
+
+    </script>
     <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/what-input.js"></script>
     <script src="js/vendor/foundation.js"></script>
