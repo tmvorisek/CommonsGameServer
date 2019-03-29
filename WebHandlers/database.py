@@ -6,29 +6,23 @@ metadata = MetaData()
 
 class DBManager():
     def __init__(self):
-        self.engine = create_engine('postgresql://postgres:pass123@localhost/commons')
-        self.engine.connect()
-        self.game_table = Table("game", metadata,
-            Column("id", Integer, Sequence("game_id_seq"), primary_key=True, nullable=False, unique=True),
-            Column("resource", Integer))
-        self.round_table = Table("round", metadata,
-            Column("id", Integer, Sequence("round_id_seq"), primary_key=True, nullable=False, unique=True),
-            Column("commons_index", Integer),
-            Column("game_id", Integer))
-        self.player_table = Table("player", metadata,
-            Column("id", Integer, Sequence("player_id_seq"), primary_key=True, nullable=False, unique=True),
-            Column("round_id", Integer),
-            Column("name", String),
-            Column("worth", Integer),
-            Column("password", String))
-
+        self.connect("postgres","pass123","commons")
 
     def create_games(self, games_arr):
-        for game in games_arr:
-            self.game_table.insert().values(resource=100)
-            self.engine.execute(self.game_table.select()).fetchall()
+        for player_count in games_arr:
+            game_table = self.meta.tables['game']
+            self.con.execute(game_table.insert().values(resource=100))
+            # self.engine.execute(game_table.select()).fetchall()
 
-            for player in range(0,game):
-
+            for player in range(0,player_count):
                 pass
+
+    def connect(self, user, password, db, host='localhost', port=5432):
+        url = 'postgresql://{}:{}@{}:{}/{}'
+        url = url.format(user, password, host, port, db)
+
+        self.con = create_engine(url, client_encoding='utf8')
+
+        self.meta = MetaData(bind=self.con, reflect=True)
+
 
