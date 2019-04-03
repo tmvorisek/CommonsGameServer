@@ -57,10 +57,14 @@ class WebSocketHandler(websocket.WebSocketHandler):
             self.handleChat(msg)
         elif msg['type'] == 'connect':
             self.connection(msg)
+        elif msg['type'] == 'game_data':
+            self.handleData(msg)
+        elif msg['type'] == 'move':
+            self.move(msg)
 
     def on_close(self):
         print("hey guys!")
-        message_handler.close(self.id)
+        #message_handler.close(self.id)
 
     def open(self):
         self.stream.set_nodelay(True)
@@ -71,6 +75,17 @@ class WebSocketHandler(websocket.WebSocketHandler):
     def close(self, id):
         pass
 
+    def handleData(self, msg):
+        data = self.db.get_round_data(msg)
+        for r in data:
+            self.write_message(json.dumps({"commons":r["commons_index"],"type":"ret_commons_data"}))
+
+    def handleChat(self,msg):
+        self.db.send_chat(msg)
+        name = self.chat({"name":msg["name"],"text":msg["name"]})
+        text = self.chat({"name":msg["text"],"text":msg["text"]})
+        self.write_message(json.dumps({"name":name["text"],
+            "text":text["text"], "type":"chat"}))
 
     def connection(self, msg):
         pass
@@ -80,7 +95,7 @@ class WebSocketHandler(websocket.WebSocketHandler):
             # ORDER BY time ASC LIMIT 1000;""")
         # chat_log = cursor.fetchall()
         # for log in chat_log:
-        # self.write_message(json.dumps({"name":log[0], "text":log[1], "type":"chat"}))
+        #self.write_message(json.dumps({"name":log[0], "text":log[1], "type":"chat"}))
 
 
     def move(self, msg):
