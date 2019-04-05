@@ -1941,7 +1941,7 @@ select {
     border-right: 0; }
   @media screen and (min-width: 40em) {
     .button-group.stacked-for-small .button {
-      width: auto; }
+      width: 100%; }
       .button-group.stacked-for-small .button:not(:last-child) {
         border-right: 1px solid #fefefe; } }
 

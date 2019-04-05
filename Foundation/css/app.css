@@ -12,6 +12,32 @@
     background-color: #ff6500;
     color: #fefefe;
 }
+
+.police {
+    background: #2199e8;
+}
+.police:hover, .police:focus {
+    background: #1189d8;
+}
+.sustain {
+    background: #3adb76;
+}
+.sustain:hover, .sustain:focus { 
+    background: #2acb66;
+}
+.overharvest {
+    background: #ec5840;
+}
+.overharvest:hover, .overharvest:focus {
+    background: #dc4830;
+}
+.invest {
+    background: #ffae00;
+}
+.invest:hover, .invest:focus {
+    background: #ef9e00;
+}
+
 #chat{
     height:500px; 
     overflow-y:scroll;

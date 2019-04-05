@@ -6,9 +6,10 @@ import argparse
 import sys
 import os
 from tornado.options import define, options, parse_command_line
-from WebHandlers import handler
+from WebHandlers import handler, database
 
 define("port", default=8888, help="run on the given port", type=int)
+define("players", default=20, help= "number of players", type=int)
 
 # we gonna store clients in dictionary..
 clients = dict()
@@ -28,12 +29,15 @@ class JsHandler(tornado.web.RequestHandler):
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         cookie = self.get_secure_cookie("commons_pass").decode()
-        self.render("Foundation/test_site.html")
+        if(cookie):
+            self.render("Foundation/test_site.html")
 
 class LinkHandler(tornado.web.RequestHandler):
     def get(self, pass_string):
-        self.set_secure_cookie("commons_pass", pass_string.encode(), expires_days=1)
-        self.redirect("/")
+        db = handler.db
+        if(db.check_pass(pass_string)):
+            self.set_secure_cookie("commons_pass", pass_string.encode(), expires_days=1)
+            self.redirect("/")
 
 settings = {'debug': True, 
             'cookie_secret': "Super Secret, don't get haxxed",
@@ -48,7 +52,7 @@ app = tornado.web.Application([
 
 
 if __name__ == '__main__':
-    # parse_command_line()
+    parse_command_line()
     app.listen(options.port)
     print("Running server at http://localhost:"+str((options.port)))
     tornado.ioloop.IOLoop.instance().start()

@@ -41,7 +41,7 @@ class CommonsIndex:
         elif action == PlayerActions.POLICE:
             earnings = self.get_police_yield(police_num)
         else:
-            raise Exception(f"Invalid action type {action}")
+            raise Exception("Invalid action type" + str(action))
         return round(earnings, 1)
 
     def get_sustain_yield(self, sustain_num):

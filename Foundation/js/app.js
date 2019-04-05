@@ -10,10 +10,30 @@ function sendObject(obj) {
     ws.send(json);
 }
 
-function addChat(name, message)
+function addChat(player_id, name, message)
 {
     var chat = document.getElementById("chat");
-    chat.innerHTML += "<b>" + name + "</b> " + message + "<br>";
+    chat.innerHTML += "<b>("+ player_id + ") " + name + "</b> " + message + "<br>";
+}
+
+function addMove(msg) {
+    color = ""
+    if (msg["move"] == "sustain") {color = "mygreen";}
+    else if (msg["move"] == "police") {color = "myblue";}
+    else if (msg["move"] == "overharvest") {color = "myred";}
+    else if (msg["move"] == "invest") {color = "myOrange";};
+    html_string = 
+        "<tr>" +
+            "<td>Turn 1</td>" +
+            "<td><div class='mybox " + color + "'></div></td>" +
+            "<td><div class='mybox myclear'></div></td>" +
+            "<td><div class='mybox myclear'></div></td>" +
+            "<td><div class='mybox myclear'></div></td>" +
+            "<td><div class='mybox myclear'></div></td>" +
+            "<td><div class='mybox myclear'></div></td>" +
+            "<td><div class='mybox myclear'></div></td>" +
+        "</tr>";
+    $("#moves-list").append(html_string);
 }
 
 function webSocketConnect() {
@@ -25,11 +45,17 @@ function webSocketConnect() {
     ws.onmessage = function (evt) { 
         var msg = JSON.parse(evt.data);
         console.log(msg)
-        if (msg["type"] == "connect"){
-            addChat("Commons", "User " + msg["number"] + " Connected");
+        if (msg["type"] == "connection"){
+            if (!msg["name"]){
+                $('#Name-Modal').foundation('open');
+            }
+            // addChat("Commons", "User " + msg["number"] + " Connected");
         }
         else if (msg["type"] == "chat"){
-            addChat(msg["name"], msg["text"]);
+            addChat(msg["player_id"], msg["name"], msg["text"]);
+        }
+        else if (msg["type"] == "move"){
+            addMove(msg);
         }
     };
     ws.onclose = function() { 
@@ -46,24 +72,43 @@ function webSocketConnect() {
 
 function sendChat() {
     var chatEntry = document.getElementById("chat-input");
-    var nameEntry = document.getElementById("name-input");
     var chatMessage = {
         text: chatEntry.value,
-        name: nameEntry.value,
-        type: "chat",
-        id: id_number
+        type: "chat"
     };
     sendObject(chatMessage);
 
     chatEntry.value = "";
+
 };
 
-function deleteAccount() {
-    sendObject({type:"delete"});
+function sendName() {
+    $('#Name-Modal').foundation('close');
+    var nameEntry = document.getElementById("name-input");
+    sendObject({
+        name: nameEntry.value,
+        type: "name"
+    });
+    nameEntry.value = "";
 }
 
+activeMove = null
 function makeMove(){
-    sendObject({type:"move"});
+    if(activeMove) {
+        sendObject({type:"move",
+            "move":activeMove});
+    }
 }
+
+defaultMoveClass = $("#move-button").attr("class");
+$("#move-button").addClass("secondary");
+function changeMoveButton(color) {
+    activeMove = color
+    $("#move-button").removeAttr("class");
+    $("#move-button").addClass(defaultMoveClass);
+    $("#move-button").addClass(color);
+}
+
+
 
 webSocketConnect();

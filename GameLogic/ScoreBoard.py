@@ -29,7 +29,8 @@ class ScoreBoard:
         score_board = {player_id: []}
         for game_round, round_score in self.round_scores.items():
             if not round_score.is_over():
-                raise Exception(f"Can't get round {game_round} scores because round isn't over")
+                raise Exception("Can't get round " + str(game_round) 
+                    + " scores because round isn't over")
             round_num = round_score.game_round
             player_action = round_score.get_player_action(player_id)
             player_score = round_score.get_player_score(player_id)
