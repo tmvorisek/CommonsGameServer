@@ -37,7 +37,7 @@ function addMove(msg) {
 }
 
 function webSocketConnect() {
-    ws = new WebSocket("ws://localhost:8888/ws?Id="+id_number);
+    ws = new WebSocket("ws://localhost:8888/ws");
     
     ws.onopen = function() {
         sendObject({type:"connect"});
@@ -49,7 +49,6 @@ function webSocketConnect() {
             if (!msg["name"]){
                 $('#Name-Modal').foundation('open');
             }
-            // addChat("Commons", "User " + msg["number"] + " Connected");
         }
         else if (msg["type"] == "chat"){
             addChat(msg["player_id"], msg["name"], msg["text"]);
@@ -59,7 +58,8 @@ function webSocketConnect() {
         }
     };
     ws.onclose = function() { 
-
+        // uncomment to delete cookie access on disconnect.
+        // document.cookie = 'commons_pass=;Max-Age=-99999999;';
     };
     document.getElementById("chat-input")
         .addEventListener("keyup", function(event) {
