@@ -41,22 +41,24 @@
                     </div>
                     <div class="row">
                         <div class="small-12">
-                            <div class="small-12 columns" style="font-size:15px">
+                            <!--<div class="small-12 columns" style="font-size:15px">
                                 <input id="name-input" type="text" value="Name">
-                            </div>
+                            </div> -->
                             <div class="small-12 columns" style="font-size:15px">
                                 <input id="chat-input" type="text" value="Text">
                             </div>
-                            <div class="small-12 columns">
-                                <a id="submitChat" href="#" class="button" onclick="sendChat()">Submit</a>
+                            <div id="submit_button">
                             </div>
+                            <!--<div class="small-12 columns">
+                                <a id="submitChat" href="#" class="secondary button" onclick="sendChat()">Submit</a>
+                            </div> -->
                         </div>
                     </div>
                 </div>
 
                 <div class="small-9 columns">
                     <div class="callout" style="height:300px; overflow-y:scroll;">
-                        <p>voting stuff goes here</p>
+                        <p>Exciting Voting Stuff Soon!</p>
                     </div>
 
                     <div class="large-12 row">
@@ -70,7 +72,7 @@
                         </div>
                         <div class="large reveal" id="Help" data-reveal data-h-offset="150">
                             <h1>Help Page</h1>
-                            <p class="lead">Rules</p>
+                            <p class="lead">Welcome to the NRM Commons Game Website! Begin by clicking any one of the buttons and pressing submit.</p>
 
                             <button class="close-button" data-close aria-label="Close modal" type="button">
                                 <span aria-hidden="true">&times;</span>
@@ -78,7 +80,7 @@
                         </div>
                         <div class="large reveal" id="About" data-reveal data-h-offset="150">
                             <h1>About</h1>
-                            <p class="lead">About Page</p>
+                            <p class="lead">NRM Commons Game</p>
 
                             <button class="close-button" data-close aria-label="Close modal" type="button">
                                 <span aria-hidden="true">&times;</span>
@@ -88,11 +90,11 @@
                         <h5>Moves:</h5>
                         <p>
                             <!--
-            This is temporary, in order to change the button colors
-            /names, I simply will need to modify a tiny bit of the css
-            files, but that won't be hard. That being said, the default colors
-            pretty much work anyway.
-            -->
+                            This is temporary, in order to change the button colors
+                            /names, I simply will need to modify a tiny bit of the css
+                            files, but that won't be hard. That being said, the default colors
+                            pretty much work anyway.
+                            -->
                             <div class="small-12">
                                 <div class="stacked-for-small button-group">
                                     <div class="small-2 columns">
@@ -117,9 +119,12 @@
 
                                     </div>
 
+
                                     <div class="small-2 columns">
-                                        <a href="#" class="secondary button" data-tooltip tabindex="1" title="Submit"
-                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick="sendButtonChoice()">Submit</a>
+                                        <div id="move_submit_button"></div>
+
+                                        <!---<a href="#" class="secondary button" data-tooltip tabindex="1" title="Submit"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick="sendMove()">Submit</a> -->
 
                                         <!---<a href="#" class="button_type" data-tooltip tabindex="1" title="Submit"
                         data-position="bottom" data-alignment="left" style="width:100%;">Submit</a> -->
@@ -139,8 +144,8 @@
                         <div class="columns">
                             <h2>Past moves</h2>
                             <div class="callout" height="800px" style="overflow:auto">
-                                <table class="stack">
-                                    <thead>
+                                <table id ="my_table" class="stack" >
+                                    <!---<thead>
                                         <tr>
                                             <th width="150px">Turns</th>
                                             <th width="150">P1</th>
@@ -149,16 +154,15 @@
                                             <th width="150">P4</th>
                                             <th width="150">P5</th>
                                             <th width="150">P6</th>
-                                            <th width="150">P7</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
+                                    <tbody> -->
+                                        <!--<div id="my_table"></div> -->
+                                        <!--<tr>
                                             <td>Turn 1</td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myred"></div></td>
                                             <td><div class="mybox mygreen"></div></td>
-                                            <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
@@ -171,14 +175,12 @@
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
-                                            <td><div class="mybox myblue"></div></td>
                                         </tr>
                                         <tr>
                                             <td>Turn 3</td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myred"></div></td>
                                             <td><div class="mybox mygreen"></div></td>
-                                            <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
                                             <td><div class="mybox myblue"></div></td>
@@ -191,9 +193,8 @@
                                             <td><div class="mybox myclear"></div></td>
                                             <td><div class="mybox myred"></div></td>
                                             <td><div class="mybox myclear"></div></td>
-                                            <td><div class="mybox myorange"></div></td>
-                                        </tr>
-                                    </tbody>
+                                        </tr> -->
+                                    <!---</tbody> -->
                                 </table>
                             </div>
                         </div>
@@ -204,7 +205,6 @@
             </div>
         </div>
     </div>
-
     <script src="js/vendor/jquery.js" type="application/javascript"></script>
     <script src="js/vendor/what-input.js" type="application/javascript"></script>
     <script src="js/vendor/foundation.js" type="application/javascript"></script>
