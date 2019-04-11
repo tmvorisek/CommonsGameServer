@@ -28,7 +28,7 @@ class JsHandler(tornado.web.RequestHandler):
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
-        cookie = self.get_secure_cookie("commons_pass").decode()
+        cookie = self.get_secure_cookie("commons_pass")
         if(cookie):
             self.render("Foundation/test_site.html")
 
