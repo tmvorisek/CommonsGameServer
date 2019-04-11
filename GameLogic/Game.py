@@ -4,12 +4,16 @@ from GameLogic.ScoreBoard import ScoreBoard
 
 class Game:
 
-    def __init__(self, game_rules):
+    def __init__(self, game_rules, player_list = None):
+        if(player_list == None):
+            player_list = range(game_rules.NUM_PLAYERS)
         self.game_rules = game_rules
-        self.players = [player for player in range(game_rules.NUM_PLAYERS)]
+        self.players = [player for player in player_list]
         self.score_board = ScoreBoard(self.players)
         self.current_round = 0
         self.commons_index = CommonsIndex(self.game_rules)
+
+
 
     def add_player_action(self, player_id, player_action, game_round):
         self.score_board.add_player_action(player_id, player_action, game_round)

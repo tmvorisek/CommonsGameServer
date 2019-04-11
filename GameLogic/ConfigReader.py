@@ -12,6 +12,5 @@ class ConfigReader:
         with open(file_path) as file:
             contents = file.read()
             as_json = json.loads(contents)
-            print(as_json)
         return as_json
 
