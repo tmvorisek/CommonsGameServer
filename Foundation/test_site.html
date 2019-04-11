@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="small-12 row">
+<!--             <div class="small-12 row">
                 <div id="chat" class="callout"></div>
                 <div class="small-10 columns" style="font-size:15px">
                     <input id="chat-input" type="text" placeholder="Chat" autocomplete="true" spellcheck="true">
@@ -50,7 +50,35 @@
                 <div class="large reveal" id="Help" data-reveal data-h-offset="150">
                     <h1>Help Page</h1>
                     <p class="lead">Rules</p>
+                </div> -->
+
+            <div class="small-12 columns">
+                <div class="small-3 columns">
+                    <div class="row">
+                        <div id="chat" class="callout">
+                            <p id="text_chat"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-12">
+                            <div class="small-12 columns" style="font-size:15px">
+                                <input id="name-input" type="text" value="Name">
+                            </div>
+                            <div class="small-12 columns" style="font-size:15px">
+                                <input id="chat-input" type="text" value="Text">
+                            </div>
+                            <div class="small-12 columns">
+                                <a id="submitChat" href="#" class="button" onclick="sendChat()">Submit</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="small-9 columns">
+                    <div class="callout" style="height:300px; overflow-y:scroll;">
+                        <p>voting stuff goes here</p>
+                    </div>
+
                     <div class="large-12 row">
                         <div class="large reveal" id="exampleModal1" data-reveal data-h-offset="150">
                             <h1>Voting Booth</h1>
@@ -81,6 +109,7 @@
                             <div class="small-12">
                                 <div class="stacked-for-small button-group">
                                     <div class="small-2 columns">
+<!-- <<<<<<< HEAD
                                         <a href="#" class="button" data-tooltip tabindex="1" title="Police Action ($100)"
                                            data-position="bottom" data-alignment="left" onclick="changeMoveButton('police')">Police Others</a>
                                     </div>
@@ -95,24 +124,48 @@
                                     <div class="small-2 columns">
                                         <a href="#" class="invest button" data-tooltip tabindex="1" title="Improves the commons index by investing a bit of your wealth. ($100)"
                                            data-position="bottom" data-alignment="left" onclick="changeMoveButton('invest')">Improve Index</a>
+======= -->
+
+                                        <a href="#" class="button" data-tooltip tabindex="1" title="Police Action"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(1)>Police</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" class="success button" data-tooltip tabindex="1" title="Sustain Yield"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(2)>Sustain</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" class="alert button" data-tooltip tabindex="1" title="Over use"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(3)>Overfish</a>
+                                    </div>
+                                    <div class="small-2 columns">
+                                        <a href="#" class="warning button" data-tooltip tabindex="1" title="Fix land"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(4)>Fix land</a>
                                     </div>
 
                                     <div class="small-1 columns">
 
                                     </div>
 
+<!-- <<<<<<< HEAD
                                     <div class="small-3 columns">
                                         <a href="#" id="move-button" class="button" data-tooltip tabindex="1" title="Submit Move"ldata-position="bottom" data-alignment="left"
                                         onclick="makeMove()">Submit</a>
 
-                                </div>
+======= -->
+                                    <div class="small-2 columns">
+                                        <a href="#" class="secondary button" data-tooltip tabindex="1" title="Submit"
+                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick="sendButtonChoice()">Submit</a>
 
+                                        <!---<a href="#" class="button_type" data-tooltip tabindex="1" title="Submit"
+                        data-position="bottom" data-alignment="left" style="width:100%;">Submit</a> -->
+                                    </div>
+                                </div>
                             </div>
                         </p>
                     </div><div class="grid-padding-x">
                         <div class="large-12 row">
                             <div class="callout">
-                                <p>Commons Rating:</p>
+                                Commons Rating: <div id="commons"></div>
                             </div>
                         </div>
                     </div>
@@ -139,8 +192,8 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
+            
 
             </div>
         </div>

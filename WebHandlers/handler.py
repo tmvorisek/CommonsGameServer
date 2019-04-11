@@ -71,6 +71,9 @@ class WebSocketHandler(websocket.WebSocketHandler):
             if len(msg['name']) != 0:
                 db.set_name(self.id, msg['name'])
                 self.details['name'] = msg['name']
+            self.handleChat(msg)
+        elif msg['type'] == 'game_data':
+            self.handleData(msg)
         elif msg['type'] == 'move':
             self.move(msg)
 
@@ -100,7 +103,6 @@ class WebSocketHandler(websocket.WebSocketHandler):
 
                     self.send(obj)
 
-  
     def move(self, msg):
         if self.details["move_num"] < 40:
             if msg["move"] in ["sustain","police","overharvest","invest"]:
@@ -113,8 +115,17 @@ class WebSocketHandler(websocket.WebSocketHandler):
                 msg["player_id"] = self.id
                 self.send(msg)
 
+    def handleData(self, msg):
+        data = self.db.get_round_data(msg)
+        for r in data:
+            self.write_message(json.dumps({"commons":r["commons_index"],"type":"ret_commons_data"}))
 
-
+    def handleChat(self,msg):
+        self.db.send_chat(msg)
+        name = self.chat({"name":msg["name"],"text":msg["name"]})
+        text = self.chat({"name":msg["text"],"text":msg["text"]})
+        self.write_message(json.dumps({"name":name["text"],
+            "text":text["text"], "type":"chat"}))
 
     def chat(self,msg):
         msg['player_id'] = self.id;
