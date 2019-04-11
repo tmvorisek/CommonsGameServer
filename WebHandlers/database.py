@@ -13,7 +13,6 @@ class DBManager():
         move_table = self.meta.tables['move']
         moves = move_table.select().where(
             move_table.c.player_id == player_id).execute().fetchall()
-        return len(moves)
 
     def store_move(self, player_id, game_id, move):
         move_table = self.meta.tables['move']
@@ -78,6 +77,27 @@ class DBManager():
                 "name":player_details[2],
                 "worth":player_details[3],
                 "type":"connection"}
+
+    def load_games(self):
+        game_table = self.meta.tables['game']
+        round_table = self.meta.tables['round']
+        player_table = self.meta.tables['player']
+        games_list = {}
+
+        for g in select([game_table.c.id]).execute().fetchall():
+            rounds = select([round_table.c.id]).where(
+                round_table.c.game_id == g[0]).execute().fetchall()
+            games_list[g[0]] = {"players":[]}
+            for r in rounds:
+                p_ids = select([player_table.c.id]).where(
+                    player_table.c.round_id == r[0]).execute().fetchall()
+                players = [player[0] for player in p_ids]
+                for p in players:
+                    games_list[g[0]]["players"].append(p)
+
+
+
+        return games_list
 
     def create_games(self, games_arr):
         self.clear_database()

@@ -3,7 +3,8 @@ import argparse
 import datetime
 from database import DBManager
 from tornado import websocket
-from GameLogic import Game
+from GameLogic.Game import Game
+from GameLogic.GameRules.GameRules import GameRules
 
 
 # we gonna store clients in dictionary..
@@ -46,12 +47,16 @@ def compute_game_players_counts(player_count):
 
 class WebSocketHandler(websocket.WebSocketHandler):
     args = parser.parse_args()
-    games_arr = []
     if args.players:
-        games_arr = compute_game_players_counts(args.players[0])
+        compute_game_players_counts(args.players[0])
 
-    def setup(self, player_count, params = {}):
-        games_arr = self.compute_game_players_counts(player_count)
+    games_list = db.load_games()
+    for game_id in games_list:
+        rules = GameRules("config.json")
+        rules.NUM_PLAYERS = len(games_list[game_id]["players"])
+        game = Game(rules, games_list[game_id]["players"])
+        games_list[game_id]["game"] = game
+
 
     def on_message(self, message):        
         msg = json.loads(message);
@@ -70,28 +75,30 @@ class WebSocketHandler(websocket.WebSocketHandler):
             self.move(msg)
 
     def on_close(self):
-        del clients[self.id]
+        if hasattr(self, 'id'):
+            del clients[self.id]
 
     def open(self):
         self.stream.set_nodelay(True)
-        cookie = self.get_secure_cookie("commons_pass").decode()
-        self.id = db.check_pass(cookie)
-        clients[self.id] = {"id": self.id, "object": self}
-        self.details = db.get_player_details(self.id)
-        self.send(self.details)
-        chat_log = db.get_chats(self.details["round_id"], self.details["game_id"])
-        for round_chats in chat_log:
-            for chat in round_chats:
-                obj = {
-                    "type":"chat",
-                    "text":chat[2],
-                    "name":chat[7],
-                    "time":chat[3],
-                    "round_id":chat[4],
-                    "player_id":chat[5],
-                }
+        cookie = self.get_secure_cookie("commons_pass")
+        if(cookie):
+            self.id = db.check_pass(cookie.decode())
+            clients[self.id] = {"id": self.id, "object": self}
+            self.details = db.get_player_details(self.id)
+            self.send(self.details)
+            chat_log = db.get_chats(self.details["round_id"], self.details["game_id"])
+            for round_chats in chat_log:
+                for chat in round_chats:
+                    obj = {
+                        "type":"chat",
+                        "text":chat[2],
+                        "name":chat[7],
+                        "time":chat[3],
+                        "round_id":chat[4],
+                        "player_id":chat[5],
+                    }
 
-                self.send(obj)
+                    self.send(obj)
 
   
     def move(self, msg):

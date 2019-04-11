@@ -31,6 +31,8 @@ class IndexHandler(tornado.web.RequestHandler):
         cookie = self.get_secure_cookie("commons_pass")
         if(cookie):
             self.render("Foundation/test_site.html")
+        else:
+            self.render("Foundation/not_allowed.html")
 
 class LinkHandler(tornado.web.RequestHandler):
     def get(self, pass_string):
