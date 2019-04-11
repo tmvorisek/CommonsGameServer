@@ -2,8 +2,8 @@ $(document).foundation()
 ws = {};
 id_number = Math.floor((Math.random() * 100000000) + 1)
 name = ""
-
-
+commons_value = "1000";
+my_button = "";
 
 function sendObject(obj) {
     json = JSON.stringify(obj);
@@ -34,6 +34,15 @@ function addMove(msg) {
             "<td><div class='mybox myclear'></div></td>" +
         "</tr>";
     $("#moves-list").append(html_string);
+    chat.innerHTML += "<b>" + name + "</b>:" + message + "<br>";
+}
+
+function get_data() {
+    var message = {
+       type: "game_data"
+    }
+    console.log("get_data_called");
+    sendObject(message);
 }
 
 function webSocketConnect() {
@@ -56,11 +65,21 @@ function webSocketConnect() {
         else if (msg["type"] == "move"){
             addMove(msg);
         }
+        else if (msg["type"] == "game_data") {
+            commons_value = msg["text"];
+        }
+        else if (msg["type"] == "ret_commons_data") {
+            console.log(msg["commons"]);
+            commons_value = msg["commons"];
+            document.getElementById("commons").innerText = commons_value;
+        }
     };
     ws.onclose = function() { 
         // uncomment to delete cookie access on disconnect.
         // document.cookie = 'commons_pass=;Max-Age=-99999999;';
     };
+    document.getElementById("commons").innerText = commons_value;
+
     document.getElementById("chat-input")
         .addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -68,6 +87,28 @@ function webSocketConnect() {
             document.getElementById("submitChat").click();
         }
     });
+}
+
+function focusButton(button) {
+    if (button == 1) {
+        my_button = "police";
+    } else if (button == 2) {
+        my_button = "sus";
+    } else if (button == 3) {
+        my_button = "mean";
+    } else if (button == 4) {
+        my_button = "good";
+    }
+    console.log(my_button);
+}
+
+function sendButtonChoice() {
+    console.log("sending choice...")
+    var message = {
+        text: my_button,
+        type: "move"
+    }
+    sendObject(message);
 }
 
 function sendChat() {
