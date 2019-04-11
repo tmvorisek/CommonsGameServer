@@ -38,6 +38,8 @@ class LinkHandler(tornado.web.RequestHandler):
         if(db.check_pass(pass_string)):
             self.set_secure_cookie("commons_pass", pass_string.encode(), expires_days=1)
             self.redirect("/")
+        else:
+            self.render("Foundation/not_allowed.html")
 
 settings = {'debug': True, 
             'cookie_secret': "Super Secret, don't get haxxed",
