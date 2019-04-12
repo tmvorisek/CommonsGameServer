@@ -3,7 +3,6 @@ import argparse
 import datetime
 import smtplib
 import getpass
-from email.MIMEMultipart import MIMEMultipart
 from database import DBManager
 from tornado import websocket
 from GameLogic.ConfigReader import ConfigReader
