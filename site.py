@@ -7,6 +7,7 @@ import sys
 import os
 from tornado.options import define, options, parse_command_line
 from WebHandlers import handler, database
+from GameLogic import ConfigReader
 
 define("port", default=8888, help="run on the given port", type=int)
 define("players", default=20, help= "number of players", type=int)
@@ -59,4 +60,5 @@ if __name__ == '__main__':
     parse_command_line()
     app.listen(options.port)
     print("Running server at http://localhost:"+str((options.port)))
+
     tornado.ioloop.IOLoop.instance().start()

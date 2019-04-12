@@ -1,8 +1,12 @@
 import json
 import argparse
 import datetime
+import smtplib
+import getpass
+from email.MIMEMultipart import MIMEMultipart
 from database import DBManager
 from tornado import websocket
+from GameLogic.ConfigReader import ConfigReader
 from GameLogic.Game import Game
 from GameLogic.GameRules.GameRules import GameRules
 
@@ -45,6 +49,18 @@ def compute_game_players_counts(player_count):
     db.create_games(games)
     return games
 
+def send_admin_email(link_list, admin_email_addr):
+    formatted_str_link_list = ''
+    for i in link_list:
+        formatted_str_link_list += i + '\n'
+    
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    admin_email_pass = getpass.getpass("enter password for " + admin_email_addr + ": ")
+    s.login(admin_email_addr, admin_email_pass)
+    msg = 'Subject: {}\n\n{}'.format('Commons game Link List', formatted_str_link_list)
+    s.sendmail(admin_email_addr, admin_email_addr, msg)
+
 class WebSocketHandler(websocket.WebSocketHandler):
     args = parser.parse_args()
     if args.players:
@@ -56,6 +72,20 @@ class WebSocketHandler(websocket.WebSocketHandler):
         rules.NUM_PLAYERS = len(games_list[game_id]["players"])
         game = Game(rules, games_list[game_id]["players"])
         games_list[game_id]["game"] = game
+
+    cfg = ConfigReader()
+    cfgArgs = cfg.get_rules_from_config('config.json')
+    admin_email_addr = cfgArgs['admin_email']
+    site_URL = cfgArgs['site_URL']
+
+    if admin_email_addr != '': 
+        pass_list = db.get_pass_list()
+        link_list = []
+        for i in pass_list:
+            #print(type(i))
+            link_list.append(str("http://" + site_URL + "/user/" + i.encode('ascii', 'ignore')))
+
+        send_admin_email(link_list, admin_email_addr)
 
 
     def on_message(self, message):        

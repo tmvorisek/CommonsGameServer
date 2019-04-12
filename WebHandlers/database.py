@@ -50,6 +50,12 @@ class DBManager():
         player_table.update().values(name=name_string).where(
             player_table.c.id==player_id).execute()
 
+    def get_pass_list(self):
+        player_table = self.meta.tables['player']
+        pass_list = select([player_table.c.password]).execute().fetchall()
+        # pass_list is actually a list of tuples now
+        return [p[0] for p in pass_list] # returns a regular list instead of a list of tuples
+
     def check_pass(self, pass_string):
         player_table = self.meta.tables['player']
         player = player_table.select().where(
