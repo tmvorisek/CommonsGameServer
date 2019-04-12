@@ -10,5 +10,7 @@
   "base_sustain_yield": 10.0,
   "base_overharvest_yield": 20.0,
   "overharvest_fine": 20,
-  "actions_are_hidden": false
+  "actions_are_hidden": false,
+  "admin_email": "bamelegari@alaska.edu",
+  "site_URL": "localhost:8888"
 }
