@@ -71,7 +71,6 @@ class WebSocketHandler(websocket.WebSocketHandler):
             if len(msg['name']) != 0:
                 db.set_name(self.id, msg['name'])
                 self.details['name'] = msg['name']
-            self.handleChat(msg)
         elif msg['type'] == 'game_data':
             self.handleData(msg)
         elif msg['type'] == 'move':
@@ -121,7 +120,7 @@ class WebSocketHandler(websocket.WebSocketHandler):
             self.write_message(json.dumps({"commons":r["commons_index"],"type":"ret_commons_data"}))
 
     def handleChat(self,msg):
-        self.db.send_chat(msg)
+        db.send_chat(msg)
         name = self.chat({"name":msg["name"],"text":msg["name"]})
         text = self.chat({"name":msg["text"],"text":msg["text"]})
         self.write_message(json.dumps({"name":name["text"],

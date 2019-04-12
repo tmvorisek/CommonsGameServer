@@ -54,6 +54,7 @@ class DBManager():
         player_table = self.meta.tables['player']
         player = player_table.select().where(
             player_table.c.password==pass_string).execute().fetchone()
+        print(pass_string)
         if(player!=None):
             return player[0]
         return False

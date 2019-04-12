@@ -61,11 +61,8 @@
                     </div>
                     <div class="row">
                         <div class="small-12">
-                            <div class="small-12 columns" style="font-size:15px">
-                                <input id="name-input" type="text" value="Name">
-                            </div>
-                            <div class="small-12 columns" style="font-size:15px">
-                                <input id="chat-input" type="text" value="Text">
+                            <div class="small-12 columns text-entry">
+                                <input id="chat-input" type="text" placeholder="Chat">
                             </div>
                             <div class="small-12 columns">
                                 <a id="submitChat" href="#" class="button" onclick="sendChat()">Submit</a>
@@ -88,6 +85,12 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                        <div class="large row reveal" id="Name-Modal" data-reveal data-h-offset="150">
+                            <h1>Hi!</h1>
+                            <h2 class="lead">Looks like this is your first time connecting, mind giving us your name?</h2>
+                            <input class="" id="name-input" type="text" placeholder="Name">
+                            <a id="submit-name" class="" href="#" class="button" onclick="sendName()">Submit</a>
+                        </div>
                         <div class="large reveal" id="Help" data-reveal data-h-offset="150">
                             <h1>Help Page</h1>
                             <p class="lead">Rules</p>
@@ -109,7 +112,6 @@
                             <div class="small-12">
                                 <div class="stacked-for-small button-group">
                                     <div class="small-2 columns">
-<!-- <<<<<<< HEAD
                                         <a href="#" class="button" data-tooltip tabindex="1" title="Police Action ($100)"
                                            data-position="bottom" data-alignment="left" onclick="changeMoveButton('police')">Police Others</a>
                                     </div>
@@ -124,40 +126,11 @@
                                     <div class="small-2 columns">
                                         <a href="#" class="invest button" data-tooltip tabindex="1" title="Improves the commons index by investing a bit of your wealth. ($100)"
                                            data-position="bottom" data-alignment="left" onclick="changeMoveButton('invest')">Improve Index</a>
-======= -->
-
-                                        <a href="#" class="button" data-tooltip tabindex="1" title="Police Action"
-                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(1)>Police</a>
-                                    </div>
-                                    <div class="small-2 columns">
-                                        <a href="#" class="success button" data-tooltip tabindex="1" title="Sustain Yield"
-                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(2)>Sustain</a>
-                                    </div>
-                                    <div class="small-2 columns">
-                                        <a href="#" class="alert button" data-tooltip tabindex="1" title="Over use"
-                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(3)>Overfish</a>
-                                    </div>
-                                    <div class="small-2 columns">
-                                        <a href="#" class="warning button" data-tooltip tabindex="1" title="Fix land"
-                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick=focusButton(4)>Fix land</a>
                                     </div>
 
-                                    <div class="small-1 columns">
-
-                                    </div>
-
-<!-- <<<<<<< HEAD
                                     <div class="small-3 columns">
                                         <a href="#" id="move-button" class="button" data-tooltip tabindex="1" title="Submit Move"ldata-position="bottom" data-alignment="left"
                                         onclick="makeMove()">Submit</a>
-
-======= -->
-                                    <div class="small-2 columns">
-                                        <a href="#" class="secondary button" data-tooltip tabindex="1" title="Submit"
-                                           data-position="bottom" data-alignment="left" style="width:100%;" onclick="sendButtonChoice()">Submit</a>
-
-                                        <!---<a href="#" class="button_type" data-tooltip tabindex="1" title="Submit"
-                        data-position="bottom" data-alignment="left" style="width:100%;">Submit</a> -->
                                     </div>
                                 </div>
                             </div>
