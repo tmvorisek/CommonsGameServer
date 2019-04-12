@@ -82,33 +82,19 @@ function webSocketConnect() {
 
     document.getElementById("chat-input")
         .addEventListener("keyup", function(event) {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            document.getElementById("submitChat").click();
-        }
-    });
-}
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("submitChat").click();
+            }
+        });
 
-function focusButton(button) {
-    if (button == 1) {
-        my_button = "police";
-    } else if (button == 2) {
-        my_button = "sus";
-    } else if (button == 3) {
-        my_button = "mean";
-    } else if (button == 4) {
-        my_button = "good";
-    }
-    console.log(my_button);
-}
-
-function sendButtonChoice() {
-    console.log("sending choice...")
-    var message = {
-        text: my_button,
-        type: "move"
-    }
-    sendObject(message);
+    document.getElementById("name-input")
+        .addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("submit-name").click();
+            }
+        });
 }
 
 function sendChat() {
