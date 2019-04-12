@@ -54,7 +54,6 @@ class DBManager():
         player_table = self.meta.tables['player']
         player = player_table.select().where(
             player_table.c.password==pass_string).execute().fetchone()
-        print(pass_string)
         if(player!=None):
             return player[0]
         return False
@@ -69,6 +68,10 @@ class DBManager():
             round_table.c.id==player_details[1]).execute().fetchone()
         move_details = move_table.select().where(
             move_table.c.player_id == player_id).execute().fetchall()
+        other_players = select([player_table.c.id,player_table.c.name]).where(
+            player_table.c.round_id.in_(select([round_table.c.id]).where(
+                round_table.c.game_id == round_details[2]))).execute().fetchall()
+        print(other_players)
 
 
         return {"player_id":player_details[0],
@@ -77,6 +80,7 @@ class DBManager():
                 "round_id":player_details[1],
                 "name":player_details[2],
                 "worth":player_details[3],
+                "other_players":other_players,
                 "type":"connection"}
 
     def load_games(self):

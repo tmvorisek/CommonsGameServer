@@ -105,7 +105,6 @@ class WebSocketHandler(websocket.WebSocketHandler):
     def move(self, msg):
         if self.details["move_num"] < 40:
             if msg["move"] in ["sustain","police","overharvest","invest"]:
-                print self.details
                 self.details["move_num"] += 1
                 db.store_move(self.id, 
                     self.details["game_id"],

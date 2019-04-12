@@ -34,7 +34,6 @@ function addMove(msg) {
             "<td><div class='mybox myclear'></div></td>" +
         "</tr>";
     $("#moves-list").append(html_string);
-    chat.innerHTML += "<b>" + name + "</b>:" + message + "<br>";
 }
 
 function get_data() {
