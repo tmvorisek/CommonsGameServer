@@ -82,7 +82,6 @@ class WebSocketHandler(websocket.WebSocketHandler):
         pass_list = db.get_pass_list()
         link_list = []
         for i in pass_list:
-            #print(type(i))
             link_list.append(str("http://" + site_URL + "/user/" + i.encode('ascii', 'ignore')))
 
         send_admin_email(link_list, admin_email_addr)

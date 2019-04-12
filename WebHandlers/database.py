@@ -53,8 +53,8 @@ class DBManager():
     def get_pass_list(self):
         player_table = self.meta.tables['player']
         pass_list = select([player_table.c.password]).execute().fetchall()
-        # pass_list is actually a list of tuples now
-        return [p[0] for p in pass_list] # returns a regular list instead of a list of tuples
+        # pass_list is actually a list of tuples with empty [1]s
+        return [p[0] for p in pass_list] # returns a regular list instead
 
     def check_pass(self, pass_string):
         player_table = self.meta.tables['player']
