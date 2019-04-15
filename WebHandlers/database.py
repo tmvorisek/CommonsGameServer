@@ -70,9 +70,12 @@ class DBManager():
         move_table = self.meta.tables['move']
 
         player_details = player_table.select().where(
-            player_table.c.id==player_id).execute().fetchone()
+            player_table.c.id == player_id).execute().fetchone()
         round_details = round_table.select().where(
             round_table.c.id==player_details[1]).execute().fetchone()
+        round_num = select([func.count(round_table.c.id)]).where(
+            round_table.c.game_id == round_details[2]).where(
+            round_table.c.id <= player_details[1]).execute().fetchone()
         move_details = move_table.select().where(
             move_table.c.player_id == player_id).execute().fetchall()
         players_dump = select([player_table.c.id,player_table.c.name]).where(
@@ -92,6 +95,7 @@ class DBManager():
                 "game_id":round_details[2],
                 "move_num":len(move_details),
                 "round_id":player_details[1],
+                "round_num": round_num[0],
                 "name":player_details[2],
                 "worth":player_details[3],
                 "players":players,
@@ -151,18 +155,6 @@ class DBManager():
         round_table.delete().where(player_table.c.id!=-1).execute()
         rule_table.delete().where(player_table.c.id!=-1).execute()
         vote_table.delete().where(player_table.c.id!=-1).execute()
-
-        # game_number = 1
-        # for player_count in games_arr:
-        #     game_table = self.meta.tables['game']
-        #     self.con.execute(game_table.insert().values(resource=100))
-        #     round_table = self.meta.tables['round']
-        #     self.con.execute(round_table.insert().values(game_id = game_number,commons_index = 2000))
-        #     for player in range(0,player_count):
-        #         player_table = self.meta.tables['player']
-        #         self.con.execute(player_table.insert().values(round_id = game_number, name="bob",password="123",worth=0))
-            
-        #     game_number = game_number+1
 
     def connect(self, user, password, db, host='localhost', port=5432):
         url = 'postgresql://{}:{}@{}:{}/{}'

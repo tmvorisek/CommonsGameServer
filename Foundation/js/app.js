@@ -138,6 +138,10 @@ function makeMove(){
         sendObject({type:"move",
             "move":activeMove});
     }
+    $("#move-button").removeAttr("class");
+    $("#move-button").addClass(defaultMoveClass);
+    $("#move-button").addClass("secondary");
+    activeMove = null;
 }
 
 defaultMoveClass = $("#move-button").attr("class");

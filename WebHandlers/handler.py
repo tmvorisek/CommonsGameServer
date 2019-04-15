@@ -8,6 +8,7 @@ from tornado import websocket
 from GameLogic.ConfigReader import ConfigReader
 from GameLogic.Game import Game
 from GameLogic.GameRules.GameRules import GameRules
+from GameLogic.PlayerActions import PlayerActions
 
 
 # we gonna store clients in dictionary..
@@ -132,16 +133,20 @@ class WebSocketHandler(websocket.WebSocketHandler):
 
                     self.send(obj)
 
+    action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
     def move(self, msg):
-        if self.details["move_num"] < 40:
-            if msg["move"] in ["sustain","police","overharvest","invest"]:
-                self.details["move_num"] += 1
-                db.store_move(self.id, 
-                    self.details["game_id"],
-                    msg["move"])
-                msg["turn"] = db.get_move_num(self.id)
-                msg["player_id"] = self.id
-                self.send(msg)
+        if msg["move"] in ["sustain","police","overharvest","invest"]:
+            action = PlayerActions.OPTIONS[self.action_lookup[msg["move"]]]
+            game = self.games_list[self.details["game_id"]]["game"]
+            game.add_player_action(self.id, action, self.details["round_num"])
+            self.details["move_num"] += 1
+            db.store_move(self.id, 
+                self.details["game_id"],
+                msg["move"])
+            msg["turn"] = db.get_move_num(self.id)
+            msg["player_id"] = self.id
+            self.send(msg)
+
 
     def handleChat(self,msg):
         db.send_chat(msg)
