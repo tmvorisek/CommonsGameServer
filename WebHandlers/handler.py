@@ -83,7 +83,7 @@ class WebSocketHandler(websocket.WebSocketHandler):
         for i in pass_list:
             link_list.append(str("http://" + site_URL + "/user/" + i.encode('ascii', 'ignore')))
 
-        send_admin_email(link_list, admin_email_addr)
+        # send_admin_email(link_list, admin_email_addr)
 
 
     def on_message(self, message):        
@@ -114,8 +114,10 @@ class WebSocketHandler(websocket.WebSocketHandler):
         if(cookie):
             self.id = db.check_pass(cookie.decode())
             clients[self.id] = {"id": self.id, "object": self}
+
             self.details = db.get_player_details(self.id)
             self.send(self.details)
+
             chat_log = db.get_chats(self.details["round_id"], self.details["game_id"])
             for round_chats in chat_log:
                 for chat in round_chats:
@@ -140,11 +142,6 @@ class WebSocketHandler(websocket.WebSocketHandler):
                 msg["turn"] = db.get_move_num(self.id)
                 msg["player_id"] = self.id
                 self.send(msg)
-
-    def handleData(self, msg):
-        data = self.db.get_round_data(msg)
-        for r in data:
-            self.write_message(json.dumps({"commons":r["commons_index"],"type":"ret_commons_data"}))
 
     def handleChat(self,msg):
         db.send_chat(msg)

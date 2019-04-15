@@ -36,6 +36,19 @@ function addMove(msg) {
     $("#moves-list").append(html_string);
 }
 
+function populate_players_table(players) {
+    html_string = "<tr><th class='player-heading'>Turns</th>";
+
+    for (player in players) {
+        p = players[player];
+        html_string += "<th class='player-heading'>" + p[0] + " ";
+        if (p[1]) html_string += "[" + p[1] + "]";
+        html_string += "</th>";
+    }
+    html_string += "</tr>\n";
+    $("#players-list").append(html_string);
+}
+
 function get_data() {
     var message = {
        type: "game_data"
@@ -57,6 +70,7 @@ function webSocketConnect() {
             if (!msg["name"]){
                 $('#Name-Modal').foundation('open');
             }
+            populate_players_table(msg['players']);
         }
         else if (msg["type"] == "chat"){
             addChat(msg["player_id"], msg["name"], msg["text"]);

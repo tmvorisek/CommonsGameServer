@@ -68,17 +68,25 @@ class DBManager():
         player_table = self.meta.tables['player']
         round_table = self.meta.tables['round']
         move_table = self.meta.tables['move']
+
         player_details = player_table.select().where(
             player_table.c.id==player_id).execute().fetchone()
         round_details = round_table.select().where(
             round_table.c.id==player_details[1]).execute().fetchone()
         move_details = move_table.select().where(
             move_table.c.player_id == player_id).execute().fetchall()
-        other_players = select([player_table.c.id,player_table.c.name]).where(
+        players_dump = select([player_table.c.id,player_table.c.name]).where(
             player_table.c.round_id.in_(select([round_table.c.id]).where(
-                round_table.c.game_id == round_details[2]))).execute().fetchall()
-        print(other_players)
+                round_table.c.game_id == round_details[2]))).order_by(
+            player_table.c.id).execute().fetchall()
 
+        players = []
+        for p in players_dump:
+            player = [p[0],None]
+            if p[1]:
+                player[1] = str(p[1])
+
+            players.append(player)
 
         return {"player_id":player_details[0],
                 "game_id":round_details[2],
@@ -86,7 +94,7 @@ class DBManager():
                 "round_id":player_details[1],
                 "name":player_details[2],
                 "worth":player_details[3],
-                "other_players":other_players,
+                "players":players,
                 "type":"connection"}
 
     def load_games(self):
