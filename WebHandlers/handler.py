@@ -50,6 +50,19 @@ def compute_game_players_counts(player_count):
     return games
 
 def send_admin_email(link_list, admin_email_addr):
+    cfg = ConfigReader()
+    cfgArgs = cfg.get_rules_from_config('config.json')
+    admin_email_addr = cfgArgs['admin_email']
+    site_URL = cfgArgs['site_URL']
+
+    if admin_email_addr != '': 
+        pass_list = db.get_pass_list()
+        link_list = []
+        for i in pass_list:
+            link_list.append(str("http://" + site_URL + "/user/" + i.encode('ascii', 'ignore')))
+    else: 
+        return 
+
     formatted_str_link_list = ''
     for i in link_list:
         formatted_str_link_list += i + '\n'
@@ -61,31 +74,29 @@ def send_admin_email(link_list, admin_email_addr):
     msg = 'Subject: {}\n\n{}'.format('Commons game Link List', formatted_str_link_list)
     s.sendmail(admin_email_addr, admin_email_addr, msg)
 
-class WebSocketHandler(websocket.WebSocketHandler):
-    args = parser.parse_args()
-    if args.players:
-        compute_game_players_counts(args.players[0])
-
+def reload_games():
+    action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
     games_list = db.load_games()
     for game_id in games_list:
         rules = GameRules("config.json")
         rules.NUM_PLAYERS = len(games_list[game_id]["players"])
         game = Game(rules, games_list[game_id]["players"])
+        for move in games_list[game_id]["moves"]:
+            action = PlayerActions.OPTIONS[action_lookup[move["harvest"]]]
+            game.add_player_action(move["player_id"],
+                    action, move["round_num"])
+
         games_list[game_id]["game"] = game
+    return games_list
 
-    cfg = ConfigReader()
-    cfgArgs = cfg.get_rules_from_config('config.json')
-    admin_email_addr = cfgArgs['admin_email']
-    site_URL = cfgArgs['site_URL']
+class WebSocketHandler(websocket.WebSocketHandler):
+    args = parser.parse_args()
+    if args.players:
+        compute_game_players_counts(args.players[0])
 
-    if admin_email_addr != '': 
-        pass_list = db.get_pass_list()
-        link_list = []
-        for i in pass_list:
-            link_list.append(str("http://" + site_URL + "/user/" + i.encode('ascii', 'ignore')))
+    games_list = reload_games()
 
-        # send_admin_email(link_list, admin_email_addr)
-
+    # send_admin_email(link_list, admin_email_addr)
 
     def on_message(self, message):        
         msg = json.loads(message);
@@ -133,12 +144,12 @@ class WebSocketHandler(websocket.WebSocketHandler):
 
                     self.send(obj)
 
-    action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
     def move(self, msg):
         if msg["move"] in ["sustain","police","overharvest","invest"]:
             action = PlayerActions.OPTIONS[self.action_lookup[msg["move"]]]
             game = self.games_list[self.details["game_id"]]["game"]
             game.add_player_action(self.id, action, self.details["round_num"])
+
             self.details["move_num"] += 1
             db.store_move(self.id, 
                 self.details["game_id"],
@@ -146,14 +157,6 @@ class WebSocketHandler(websocket.WebSocketHandler):
             msg["turn"] = db.get_move_num(self.id)
             msg["player_id"] = self.id
             self.send(msg)
-
-
-    def handleChat(self,msg):
-        db.send_chat(msg)
-        name = self.chat({"name":msg["name"],"text":msg["name"]})
-        text = self.chat({"name":msg["text"],"text":msg["text"]})
-        self.write_message(json.dumps({"name":name["text"],
-            "text":text["text"], "type":"chat"}))
 
     def chat(self,msg):
         msg['player_id'] = self.id;

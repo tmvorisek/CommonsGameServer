@@ -105,18 +105,32 @@ class DBManager():
         game_table = self.meta.tables['game']
         round_table = self.meta.tables['round']
         player_table = self.meta.tables['player']
+        move_table = self.meta.tables['move']
         games_list = {}
 
         for g in select([game_table.c.id]).execute().fetchall():
             rounds = select([round_table.c.id]).where(
                 round_table.c.game_id == g[0]).execute().fetchall()
-            games_list[g[0]] = {"players":[]}
+            games_list[g[0]] = {"players":[], "moves":[]}
             for r in rounds:
                 p_ids = select([player_table.c.id]).where(
-                    player_table.c.round_id == r[0]).execute().fetchall()
+                    player_table.c.round_id == r[0]).order_by(
+                    player_table.c.id).execute().fetchall()
                 players = [player[0] for player in p_ids]
                 for p in players:
                     games_list[g[0]]["players"].append(p)
+                    moves_dump = move_table.select().where(
+                        move_table.c.player_id == p).execute().fetchall()
+                    for m in moves_dump:
+                        round_num = select([func.count(round_table.c.id)]).where(
+                            round_table.c.game_id == g[0]).where(
+                            round_table.c.id <= m[2]).execute().fetchone()[0]
+                        move = {"id":m[0],
+                            "player_id":m[1],
+                            "round_id":m[2],
+                            "round_num":int(round_num),
+                            "harvest":m[3]}
+                        games_list[g[0]]["moves"].append(move)
 
         return games_list
 
