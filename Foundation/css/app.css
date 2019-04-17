@@ -24,10 +24,10 @@
     background: #1189d8;
 }
 .sustain {
-    background: #1adb76;
+    background: #0abb56;
 }
 .sustain:hover, .sustain:focus { 
-    background: #0acb66;
+    background: #039b46;
 }
 .overharvest {
     background: #ec5840;

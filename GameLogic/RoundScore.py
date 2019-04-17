@@ -49,5 +49,6 @@ class RoundScore:
         return self.player_actions[player_id]
 
     def get_player_score(self, player_id):
+        print(self.player_scores)
         return self.player_scores[player_id]
 
