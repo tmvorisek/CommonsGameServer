@@ -1,5 +1,5 @@
 from sqlalchemy import (Table, Column, select, insert, update, create_engine,
-                        Integer, String, Sequence, MetaData, func)
+                        Integer, String, Sequence, MetaData, func, literal)
 import uuid
 
 metadata = MetaData()
@@ -14,21 +14,27 @@ class DBManager():
         moves = move_table.select().where(
             move_table.c.player_id == player_id).execute().fetchall()
 
-    def store_move(self, player_id, game_id, move):
+    def store_move(self, player_id, round_id, move):
         move_table = self.meta.tables['move']
         move_table.insert().values(
             player_id=player_id,
-            game_id=game_id,
+            round_id=round_id,
             harvest=move).execute()
 
+    def get_round_index(self, round_id, game_id):
+        round_table = self.meta.tables['round']
+        index = select([func.count(round_table.c.id)]).where(
+            round_table.c.game_id == game_id).where(
+            round_table.c.id <= round_id).execute().fetchone()[0]
+        return index
 
-    def get_chats(self, round_id, game_id):
+
+    def get_chats(self, game_id):
         chat_table = self.meta.tables['chat']
         player_table = self.meta.tables['player']
         round_table = self.meta.tables['round']
         rounds = round_table.select().where(
-            round_table.c.game_id == game_id).where(
-            round_table.c.id <= round_id).execute().fetchall()
+            round_table.c.game_id == game_id).execute().fetchall()
         chat_log = []
         for r in rounds:
             chat_log.append(chat_table.join(player_table, 
@@ -91,7 +97,13 @@ class DBManager():
 
             players.append(player)
 
+        player_index = 0
+        for p in players:
+            if p[0] <= player_id:
+                player_index += 1
+
         return {"player_id":player_details[0],
+                "player_index":player_index,
                 "game_id":round_details[2],
                 "move_num":len(move_details),
                 "round_id":player_details[1],
@@ -112,11 +124,17 @@ class DBManager():
             rounds = select([round_table.c.id]).where(
                 round_table.c.game_id == g[0]).execute().fetchall()
             games_list[g[0]] = {"players":[], "moves":[]}
+            r_list = []
             for r in rounds:
                 p_ids = select([player_table.c.id]).where(
                     player_table.c.round_id == r[0]).order_by(
                     player_table.c.id).execute().fetchall()
                 players = [player[0] for player in p_ids]
+                player_indexes = {}
+                i = 1
+                for p in players:
+                    player_indexes[p] = i
+                    i += 1
                 for p in players:
                     games_list[g[0]]["players"].append(p)
                     moves_dump = move_table.select().where(
@@ -127,6 +145,7 @@ class DBManager():
                             round_table.c.id <= m[2]).execute().fetchone()[0]
                         move = {"id":m[0],
                             "player_id":m[1],
+                            "player_index":player_indexes[m[1]],
                             "round_id":m[2],
                             "round_num":int(round_num),
                             "harvest":m[3]}

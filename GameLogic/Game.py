@@ -8,7 +8,7 @@ class Game:
         if(player_list == None):
             player_list = range(game_rules.NUM_PLAYERS)
         self.game_rules = game_rules
-        self.players = [player for player in player_list]
+        self.players = [player+1 for player in range(0,len(player_list))]
         self.score_board = ScoreBoard(self.players)
         self.current_round = 0
         self.commons_index = CommonsIndex(self.game_rules)

@@ -22,8 +22,7 @@ class ScoreBoard:
         if game_round not in self.round_scores.keys():
             self.round_scores[game_round] = RoundScore(game_round)
 
-        round_score = self.round_scores[game_round]
-        round_score.set_player_action(player_id, action)
+        self.round_scores[game_round].set_player_action(player_id, action)
 
     def get_player_score(self, player_id):
         score_board = {player_id: []}

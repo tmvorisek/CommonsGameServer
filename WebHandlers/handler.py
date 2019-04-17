@@ -83,13 +83,15 @@ def reload_games():
         game = Game(rules, games_list[game_id]["players"])
         for move in games_list[game_id]["moves"]:
             action = PlayerActions.OPTIONS[action_lookup[move["harvest"]]]
-            game.add_player_action(move["player_id"],
-                    action, move["round_num"])
+            game.add_player_action(move["player_index"],
+                    action, 
+                    db.get_round_index(move["round_num"],game_id))
 
         games_list[game_id]["game"] = game
     return games_list
 
 class WebSocketHandler(websocket.WebSocketHandler):
+    action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
     args = parser.parse_args()
     if args.players:
         compute_game_players_counts(args.players[0])
@@ -128,9 +130,10 @@ class WebSocketHandler(websocket.WebSocketHandler):
             clients[self.id] = {"id": self.id, "object": self}
 
             self.details = db.get_player_details(self.id)
+            self.game = self.games_list[self.details["game_id"]]["game"]
             self.send(self.details)
 
-            chat_log = db.get_chats(self.details["round_id"], self.details["game_id"])
+            chat_log = db.get_chats(self.details["game_id"])
             for round_chats in chat_log:
                 for chat in round_chats:
                     obj = {
@@ -144,11 +147,19 @@ class WebSocketHandler(websocket.WebSocketHandler):
 
                     self.send(obj)
 
+            self.player_index = self.details["player_index"]
+            # score_board = self.game.get_player_score_board(self.player_index)
+            # print(score_board)
+
     def move(self, msg):
         if msg["move"] in ["sustain","police","overharvest","invest"]:
             action = PlayerActions.OPTIONS[self.action_lookup[msg["move"]]]
             game = self.games_list[self.details["game_id"]]["game"]
-            game.add_player_action(self.id, action, self.details["round_num"])
+            game.add_player_action(
+                self.player_index, 
+                action, 
+                db.get_round_index(self.details["round_num"],
+                    self.details["game_id"]))
 
             self.details["move_num"] += 1
             db.store_move(self.id, 
