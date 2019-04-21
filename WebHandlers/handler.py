@@ -3,7 +3,7 @@ import argparse
 import datetime
 import smtplib
 import getpass
-from database import DBManager
+from WebHandlers.database import DBManager
 from tornado import websocket
 from GameLogic.ConfigReader import ConfigReader
 from GameLogic.Game import Game
@@ -148,8 +148,8 @@ class WebSocketHandler(websocket.WebSocketHandler):
                     self.send(obj)
 
             self.player_index = self.details["player_index"]
-            # score_board = self.game.get_player_score_board(self.player_index)
-            # print(score_board)
+            score_board = self.game.get_player_score_board(self.player_index)
+            print(f"Player score board: {score_board}")
 
     def move(self, msg):
         if msg["move"] in ["sustain","police","overharvest","invest"]:
