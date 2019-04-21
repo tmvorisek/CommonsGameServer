@@ -95,16 +95,27 @@
                                 }
                             </style>
 
-                            <h1>Overview</h1>
+                            <h2>Who You Are</h2>
                             <ul>
-                                <li>The goal is to make more money than your competitors over the next 25 years.</li>
-                                <li>Each year, you will be able to choose one of four actions: <span class="sustainText">Sustain</span>, <span class="overharvestText">Overharvest</span>, <span class="policeText">Police</span>, and <span class="restoreText">Restore</span>.</li>
-                                <li>These actions affect a commons index that represents the health of the fishery.</li>
-                                <li>The commons index determines how profitable fishing will be that year.</li>
-                                <li>The fishery is unregulated, so it will be up to YOU to propose new regulations.</li>
+                                <li>You are the captain of a commercial fishing boat.</li>
+                                <li>Your goal is to make as much money as you can over the next 25 years.</li>
+                                <li>You are competing against other captains, but you all share the same fishery.</li>
                             </ul>
+                            <h2>What You Do</h2>
+                            <ul>
+                                <li>Each year you will choose one of four actions that can possibly make you money (<span class="sustainText">Sustain</span>, <span class="overharvestText">Overharvest</span>, <span class="policeText">Police</span>, and <span class="restoreText">Restore</span>).</li>
+                                <li>After every 5 years, a summit will be held.</li>
+                                <li>At the summit, new regulations can be voted to be put in place by YOU and other captains</li>   
+                            </ul>
+                            <h2>Steps of a Game</h2>
+                            <ol>
+                                <li>Choose one of four actions for the round: <span class="sustainText">Sustain</span>, <span class="overharvestText">Overharvest</span>, <span class="policeText">Police</span>, and <span class="restoreText">Restore</span>.</li>
+                                <li>Repeat step (1) until the next summit starts.</li>
+                                <li>At the start of the summit, propose new regulations and vote on previously proposed regulations.</li>
+                                <li>Start again at step (1) until the game is over.</li>
+                            </ol>
 
-                            <h1>Commons Index</h1>
+                            <h2>Commons Index</h2>
                             <ul>
                                 <li>The commons index shows how healthy the fishery is.</li>
                                 <li>A high index means the fishery is healthy. Thus, the higher the index, the more profitable fishing will be.</li>
@@ -112,14 +123,14 @@
                                 <li>Players can also choose to restore the index, but the index will only increase if no one overharvested that year.</li>
                             </ul>
 
-                            <h1>Years</h1>
+                            <h2>Years</h2>
                             <ul>
                                 <li>You must choose an action for each year until the next summit.</li>
                                 <li>At the end of the summit, you will be shown your profits for those years.</li>
                             </ul>
 
 
-                            <h1>Actions</h1>
+                            <h2>Actions</h2>
                             <ol>
                                 <li>
                                     <h3 class="sustainText">Sustain</h3>
@@ -139,7 +150,7 @@
                                 </li>
                             </ol>
 
-                            <h1>Summits</h1>
+                            <h2>Summits</h2>
                             <ul>
                                 <li>After every 5 years, a summit is held to enact new regulations on the fishery.</li>
                                 <li>During these summits, you can propose new fishing regulations.</li>
@@ -148,7 +159,9 @@
                                 <li>During the next summit, the voted-in regulations will be put in place.</li>
                             </ul>
 
-                            <h1>Regulation Proposals</h1>
+                            <h2>Regulation Proposals</h2>
+                            New regulations can be proposed at every summit. These regulations change the rules of the game, so use the to your benefit.
+                            There are 2 in-game regulations you can propose, and there are verbal contracts you can propose between other players.
                             <ol>
                                 <li>
                                     <h3>Overharvest Fine</h3>
@@ -163,9 +176,6 @@
                                     <p>Players can feel free to promise certain things with one another. Be careful though. There is no way to guarantee players will follow through with these contracts.</p>
                                 </li>
                             </ol>
-
-
-
 
                             <button class="close-button" data-close aria-label="Close modal" type="button">
                                 <span aria-hidden="true">&times;</span>
@@ -184,20 +194,20 @@
                             <div class="small-12">
                                 <div class="stacked-for-small button-group">
                                     <div class="small-2 columns">
-                                        <a href="#" class="button" data-tooltip tabindex="1" title="Police Action ($100)"
-                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('police')">Police Others</a>
+                                        <a href="#" class="button" data-tooltip tabindex="1" title="Catch players trying to overharvest this round for some cash ($100)."
+                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('police')">Police</a>
                                     </div>
                                     <div class="small-2 columns">
-                                        <a href="#" class="sustain button" data-tooltip tabindex="1" title="Sustain Yield"
-                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('sustain')">Sustainable Harvest</a>
+                                        <a href="#" class="sustain button" data-tooltip tabindex="1" title="Harvest a sustainable amount of fish for some profit."
+                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('sustain')">Sustain</a>
                                     </div>
                                     <div class="small-2 columns">
-                                        <a href="#" class="overharvest button" data-tooltip tabindex="1" title="Over use"
-                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('overharvest')">Over Harvest</a>
+                                        <a href="#" class="overharvest button" data-tooltip tabindex="1" title="Harvest an unsustainable amount of resources for more profit at the cost of harming the commons index."
+                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('overharvest')">Overharvest</a>
                                     </div>
                                     <div class="small-2 columns">
-                                        <a href="#" class="invest button" data-tooltip tabindex="1" title="Improves the commons index by investing a bit of your wealth. ($100)"
-                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('invest')">Improve Index</a>
+                                        <a href="#" class="invest button" data-tooltip tabindex="1" title="Potentially improves the commons index for some cash ($100)."
+                                           data-position="bottom" data-alignment="left" onclick="changeMoveButton('invest')">Restore</a>
                                     </div>
 
                                     <div class="small-3 columns">
