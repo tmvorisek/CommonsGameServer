@@ -81,12 +81,16 @@ def reload_games():
         rules = GameRules("config.json")
         rules.NUM_PLAYERS = len(games_list[game_id]["players"])
         game = Game(rules, games_list[game_id]["players"])
+        max_round = 1
         for move in games_list[game_id]["moves"]:
             action = PlayerActions.OPTIONS[action_lookup[move["harvest"]]]
             game.add_player_action(move["player_index"],
                     action, 
                     db.get_round_index(move["round_num"],game_id))
-
+            if move["round_num"] > max_round:
+                max_round = move["round_num"]
+        for _ in range(1,max_round):
+            game.play_to_next_round()
         games_list[game_id]["game"] = game
     return games_list
 
@@ -148,7 +152,7 @@ class WebSocketHandler(websocket.WebSocketHandler):
                     self.send(obj)
 
             self.player_index = self.details["player_index"]
-            # score_board = self.game.get_player_score_board(self.player_index)
+            score_board = self.game.get_player_score_board(self.player_index)
             # print(score_board)
 
     def move(self, msg):
