@@ -27,6 +27,7 @@
                                 <li><a href="#" data-open="Help">Help</a></li>
                                 <li><a href="#" data-open="About">About</a></li>
                                 <li><a href="#" data-open="Name-Modal">Rename</a></li>
+                                <li><a href="#" data-open="Voting-Modal">Vote</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -52,9 +53,29 @@
                 </div>
 
                 <div class="small-9 columns">
-                    <div class="callout" style="height:300px; overflow-y:scroll;">
-                        <p>voting stuff goes here</p>
+
+                    <div class="large-12 columns">
+                        <div class="small-12 columns">
+                            <div class="small-6 columns">
+                                <div class="callout" style="overflow-y:scroll; height:300px;">
+                                    <div class="callout secondary" style="text-align:center;">Currently Enacted Proposals </div>
+                                    <p> list of proposals</p>
+                                </div>
+                            </div>
+                            <div class="small-6 columns">
+                                <div class="callout" style="overflow-y:scroll; height:300px;">
+                                    <div class="callout secondary" style="text-align:center;">Suggested Proposals. </div>
+                                    <p>voting stuff here</p>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
+
+
+                    <!--<div class="callout" style="height:300px; overflow-y:scroll;">
+                        <p>voting stuff goes here</p>
+                    </div>-->
 
                     <div class="large-12 row">
                         <div class="large reveal" id="exampleModal1" data-reveal data-h-offset="150">
@@ -74,10 +95,75 @@
                         <div class="large reveal" id="Error" data-reveal data-h-offset="300">
 
                         </div>
+
+                        <div class="large reveal" id="Voting-Modal" data-reveal data-h-offset="300">
+                            <div class="secondary callout" style="text-align:center">
+                                <h1>Summit</h1>
+
+                            </div>
+
+                            <p> Yes or no on the following. You may choose to abstain on none or all of the choices. You may also suggest your own rule changes to be voted on for the next summit. </p>
+
+
+                            <!-- Part that displays voting info...  -->
+                            <div class="row">
+                                <div class="small-12 columns">
+                                    <div class="small-3 columns">
+                                        <input type="radio" value="yea" id="v1_yes" required><label for="v1_yes">Yay</label>
+                                        <input type="radio" value="nay" id="v1_no"><label for="v1_no">Nay</label>
+                                    </div>
+                                    <div class="small-9 columns">
+                                        <p>This is where a description of the voting stuff goes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End part that displays voting info... -->
+                            <!-- Part that displays voting info...  -->
+                            <div class="row">
+                                <div class="small-12 columns">
+                                    <div class="small-3 columns">
+                                        <input type="radio" value="yea" id="v2_yes" required><label for="v2_yes">Yay</label>
+                                        <input type="radio" value="nay" id="v2_no"><label for="v2_no">Nay</label>
+                                    </div>
+                                    <div class="small-9 columns">
+                                        <p>This is where a description of the voting stuff goes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End part that displays voting info... -->
+
+
+                            <label>
+                                Any rule you want to inact to be voted on next round? Write them here.
+                                <textarea placeholder="None"></textarea>
+                            </label>
+
+
+                            <style>
+                                button.vote_submit_color {
+                                    background-color: cornflowerblue;
+                                }
+
+                                    button.vote_submit_color:hover {
+                                        background-color: cornflowerblue;
+                                    }
+                            </style>
+
+                            <button class="button vote_submit_color">
+                                Submit Vote
+                            </button>
+
+
+                            <button class="close-button" data-close aria-label="Close modal" type="button">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+
                         <div class="large reveal" id="Help" data-reveal data-h-offset="300">
                             <div class="secondary callout" style="text-align:center">
                                 <h1>Help page</h1>
-                           
+
                             </div>
 
                             <style>
@@ -108,7 +194,7 @@
                             <ul>
                                 <li>Each year you will choose one of four actions that can possibly make you money (<span class="sustainText">Sustain</span>, <span class="overharvestText">Overharvest</span>, <span class="policeText">Police</span>, and <span class="restoreText">Restore</span>).</li>
                                 <li>After every 5 years, a summit will be held.</li>
-                                <li>At the summit, new regulations can be voted to be put in place by YOU and other captains</li>   
+                                <li>At the summit, new regulations can be voted to be put in place by YOU and other captains</li>
                             </ul>
                             <h2>Steps of a Game</h2>
                             <ol>
@@ -214,8 +300,8 @@
                                     </div>
 
                                     <div class="small-3 columns">
-                                        <a href="#" id="move-button" class="button" data-tooltip tabindex="1" title="Submit Move"ldata-position="bottom" data-alignment="left"
-                                        onclick="makeMove()">Submit</a>
+                                        <a href="#" id="move-button" class="button" data-tooltip tabindex="1" title="Submit Move" ldata-position="bottom" data-alignment="left"
+                                           onclick="makeMove()">Submit</a>
                                     </div>
                                 </div>
                             </div>
@@ -243,8 +329,7 @@
                                 <table class="stack">
                                     <thead id="players-list">
                                     </thead>
-                                    <tbody id="moves-list">
-                                    </tbody>
+                                    <tbody id="moves-list"></tbody>
                                 </table>
                             </div>
                         </div>
