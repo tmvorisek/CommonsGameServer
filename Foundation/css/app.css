@@ -24,10 +24,10 @@
     background: #1189d8;
 }
 .sustain {
-    background: #0abb56;
+    background: #0a9b46;
 }
 .sustain:hover, .sustain:focus { 
-    background: #039b46;
+    background: #037b36;
 }
 .overharvest {
     background: #ec5840;
@@ -46,6 +46,21 @@
     height:500px; 
     overflow-y:scroll;
     font-size:15px
+}
+
+.chat-button {
+    background-color: #5f50c8;
+}
+
+.chat-button:hover {
+    background-color: #4f37ba;
+}
+
+.display-card {
+    font-size: 10px;
+    background-color: #ccc;
+    border-radius: 8px;
+    
 }
 
 .player-heading {

@@ -99,7 +99,7 @@ class DBManager():
 
         player_index = 0
         for p in players:
-            if p[0] <= player_id:
+            if p[0] < player_id:
                 player_index += 1
 
         return {"player_id":player_details[0],
@@ -145,9 +145,10 @@ class DBManager():
                             round_table.c.id <= m[2]).execute().fetchone()[0]
                         move = {"id":m[0],
                             "player_id":m[1],
+                            "game_id":g[0],
                             "player_index":player_indexes[m[1]],
                             "round_id":m[2],
-                            "round_num":int(round_num),
+                            "round_index":int(round_num),
                             "harvest":m[3]}
                         games_list[g[0]]["moves"].append(move)
 

@@ -3,12 +3,14 @@ import argparse
 import datetime
 import smtplib
 import getpass
-from database import DBManager
+from WebHandlers.database import DBManager
 from tornado import websocket
-from GameLogic.ConfigReader import ConfigReader
-from GameLogic.Game import Game
-from GameLogic.GameRules.GameRules import GameRules
-from GameLogic.PlayerActions import PlayerActions
+# from GameLogic.ConfigReader import ConfigReader
+# from GameLogic.Game import Game
+# from GameLogic.GameRules.GameRules import GameRules
+# from GameLogic.PlayerActions import PlayerActions
+from GameLogicII.game import Game
+from GameLogicII.logic_exception import LogicException
 
 
 # we gonna store clients in dictionary..
@@ -75,30 +77,45 @@ def send_admin_email(link_list, admin_email_addr):
     s.sendmail(admin_email_addr, admin_email_addr, msg)
 
 def reload_games():
-    action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
-    games_list = db.load_games()
-    for game_id in games_list:
-        rules = GameRules("config.json")
-        rules.NUM_PLAYERS = len(games_list[game_id]["players"])
-        game = Game(rules, games_list[game_id]["players"])
-        max_round = 1
-        for move in games_list[game_id]["moves"]:
-            action = PlayerActions.OPTIONS[action_lookup[move["harvest"]]]
-            game.add_player_action(move["player_index"],
-                    action, 
-                    db.get_round_index(move["round_num"],game_id))
-            if move["round_num"] > max_round:
-                max_round = move["round_num"]
-        for _ in range(1,max_round):
-            game.play_to_next_round()
-        games_list[game_id]["game"] = game
+    games_list = {}
+    moves = db.load_games()
+    # action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
+    for game_id in moves:
+        game = Game(len(moves[game_id]["players"]))
+        games_list[game_id] = game
+        active_round = 1
+        for move in moves[game_id]["moves"]:
+            if move["round_index"] > active_round:
+                game.finish_summit()
+            try:
+                game.add_move(move["player_index"]-1, move["harvest"])
+            except:
+                pass
+
     return games_list
+    #     # rules = GameRules("config.json")
+    #     # rules.NUM_PLAYERS = len(games_list[game_id]["players"])
+    #     game = Game(rules, games_list[game_id]["players"])
+    #     max_round = 1
+    #     for move in games_list[game_id]["moves"]:
+    #         action = PlayerActions.OPTIONS[action_lookup[move["harvest"]]]
+    #         round_index = db.get_round_index(move["round_num"],game_id)
+    #         game.add_player_action(move["player_index"],
+    #                 action, 
+    #                 round_index)
+    #         if round_index > max_round:
+    #             max_round = round_index
+    #     for _ in range(1,max_round):
+    #         game.play_to_next_round()
+    #     games_list[game_id]["game"] = game
+    # return games_list
 
 class WebSocketHandler(websocket.WebSocketHandler):
     action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
     args = parser.parse_args()
     if args.players:
         compute_game_players_counts(args.players[0])
+        exit()
 
     games_list = reload_games()
 
@@ -134,7 +151,11 @@ class WebSocketHandler(websocket.WebSocketHandler):
             clients[self.id] = {"id": self.id, "object": self}
 
             self.details = db.get_player_details(self.id)
-            self.game = self.games_list[self.details["game_id"]]["game"]
+            self.game = self.games_list[self.details["game_id"]]
+            self.player_index = self.details["player_index"]
+            self.player = self.game.get_player(self.player_index)
+            self.details["active_round"] = self.player.active_round
+            self.details["commons_index"] = float(self.game.get_commons_index())
             self.send(self.details)
 
             chat_log = db.get_chats(self.details["game_id"])
@@ -148,30 +169,36 @@ class WebSocketHandler(websocket.WebSocketHandler):
                         "round_id":chat[4],
                         "player_id":chat[5],
                     }
-
                     self.send(obj)
 
-            self.player_index = self.details["player_index"]
-            score_board = self.game.get_player_score_board(self.player_index)
-            # print(score_board)
 
     def move(self, msg):
         if msg["move"] in ["sustain","police","overharvest","invest"]:
-            action = PlayerActions.OPTIONS[self.action_lookup[msg["move"]]]
-            game = self.games_list[self.details["game_id"]]["game"]
-            game.add_player_action(
-                self.player_index, 
-                action, 
-                db.get_round_index(self.details["round_num"],
-                    self.details["game_id"]))
+            try:
+                self.game.add_move(self.player_index, msg["move"])
+            except LogicException as e:
+                self.send_error(e)
+                self.game.finish_summit()
+            else:
+                db.store_move(self.id, 
+                    self.details["game_id"],
+                    msg["move"])
+            # action = PlayerActions.OPTIONS[self.action_lookup[msg["move"]]]
+            # game = self.games_list[self.details["game_id"]]["game"]
+            # game.add_player_action(
+                # self.player_index, 
+                # action, 
+                # db.get_round_index(self.details["round_num"],
+                    # self.details["game_id"]))
+            # self.details["move_num"] += 1
+            # msg["turn"] = db.get_move_num(self.id)
+            # msg["player_id"] = self.id
+            # self.send(msg)
 
-            self.details["move_num"] += 1
-            db.store_move(self.id, 
-                self.details["game_id"],
-                msg["move"])
-            msg["turn"] = db.get_move_num(self.id)
-            msg["player_id"] = self.id
-            self.send(msg)
+            # score_board = self.game.get_player_score_board(self.player_index)
+            # print score_board
+
+
 
     def chat(self,msg):
         msg['player_id'] = self.id;
@@ -184,5 +211,10 @@ class WebSocketHandler(websocket.WebSocketHandler):
 
     def send(self, obj):
         message = json.dumps(obj, default=str)
+        self.write_message(message)
+
+    def send_error(self, error):
+        message = json.dumps({ "type": "error",
+                    "message": str(error)}, default=str)
         self.write_message(message)
 

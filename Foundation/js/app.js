@@ -10,10 +10,24 @@ function sendObject(obj) {
     ws.send(json);
 }
 
+function initPage(msg) 
+{
+    $("#commons-index").text(parseFloat(msg["commons_index"]).toFixed(1));
+    $("#summit-index").text(msg["round_num"]);
+    $("#round-index").text(msg["active_round"]);
+}
+
 function addChat(player_id, name, message)
 {
     var chat = document.getElementById("chat");
     chat.innerHTML += "<b>("+ player_id + ") " + name + "</b> " + message + "<br>";
+}
+
+function addError(message)
+{
+    var error = $("#Error")
+    error.append("<h2>Error:</h2><p><h3>"+message["message"]+"</h3>")
+    error.foundation('open');
 }
 
 function addMove(msg) {
@@ -67,10 +81,7 @@ function webSocketConnect() {
         var msg = JSON.parse(evt.data);
         console.log(msg)
         if (msg["type"] == "connection"){
-            if (!msg["name"]){
-                $('#Name-Modal').foundation('open');
-            }
-            populate_players_table(msg['players']);
+            initPage(msg);
         }
         else if (msg["type"] == "chat"){
             addChat(msg["player_id"], msg["name"], msg["text"]);
@@ -81,17 +92,14 @@ function webSocketConnect() {
         else if (msg["type"] == "game_data") {
             commons_value = msg["text"];
         }
-        else if (msg["type"] == "ret_commons_data") {
-            console.log(msg["commons"]);
-            commons_value = msg["commons"];
-            document.getElementById("commons").innerText = commons_value;
+        else if (msg["type"] == "error") {
+            addError(msg);
         }
     };
     ws.onclose = function() { 
         // uncomment to delete cookie access on disconnect.
         // document.cookie = 'commons_pass=;Max-Age=-99999999;';
     };
-    document.getElementById("commons").innerText = commons_value;
 
     document.getElementById("chat-input")
         .addEventListener("keyup", function(event) {
