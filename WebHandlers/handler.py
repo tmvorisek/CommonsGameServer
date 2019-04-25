@@ -23,12 +23,11 @@ parser.add_argument('--players', metavar='N', type=int, nargs=1,
 
 db = DBManager()
 
-def broadcast(obj, round_id, game_id):
+def broadcast(obj, game_id):
     message = json.dumps(obj, default=str)
     for c in clients:
         if clients[c]["object"].details["game_id"] == game_id:
-            if clients[c]["object"].details["round_id"] >= round_id:
-                clients[c]["object"].write_message(message)
+            clients[c]["object"].write_message(message)
 
 def compute_game_players_counts(player_count):
     rem = player_count % 8
@@ -83,32 +82,16 @@ def reload_games():
     for game_id in moves:
         game = Game(len(moves[game_id]["players"]))
         games_list[game_id] = game
-        active_round = 1
+        active_summit = 0
         for move in moves[game_id]["moves"]:
-            if move["round_index"] > active_round:
+            if move["summit_index"] > active_summit:
                 game.finish_summit()
             try:
-                game.add_move(move["player_index"]-1, move["harvest"])
+                game.add_move(move["player_index"], move["harvest"])
             except:
                 pass
 
     return games_list
-    #     # rules = GameRules("config.json")
-    #     # rules.NUM_PLAYERS = len(games_list[game_id]["players"])
-    #     game = Game(rules, games_list[game_id]["players"])
-    #     max_round = 1
-    #     for move in games_list[game_id]["moves"]:
-    #         action = PlayerActions.OPTIONS[action_lookup[move["harvest"]]]
-    #         round_index = db.get_round_index(move["round_num"],game_id)
-    #         game.add_player_action(move["player_index"],
-    #                 action, 
-    #                 round_index)
-    #         if round_index > max_round:
-    #             max_round = round_index
-    #     for _ in range(1,max_round):
-    #         game.play_to_next_round()
-    #     games_list[game_id]["game"] = game
-    # return games_list
 
 class WebSocketHandler(websocket.WebSocketHandler):
     action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
@@ -156,6 +139,8 @@ class WebSocketHandler(websocket.WebSocketHandler):
             self.player = self.game.get_player(self.player_index)
             self.details["active_round"] = self.player.active_round
             self.details["commons_index"] = float(self.game.get_commons_index())
+            self.details["max_round"] = self.game.config["rounds_per_summit"]
+            self.details["wealth"] = self.player.wealth
             self.send(self.details)
 
             chat_log = db.get_chats(self.details["game_id"])
@@ -171,6 +156,10 @@ class WebSocketHandler(websocket.WebSocketHandler):
                     }
                     self.send(obj)
 
+            obj = {"type": "scoreboard",
+                    "scoreboard":self.game.get_scoreboard_for_player(self.player_index)}
+            self.send(obj)
+
 
     def move(self, msg):
         if msg["move"] in ["sustain","police","overharvest","invest"]:
@@ -179,21 +168,24 @@ class WebSocketHandler(websocket.WebSocketHandler):
             except LogicException as e:
                 self.send_error(e)
                 self.game.finish_summit()
-            else:
+                db.new_summit(self.details["game_id"],
+                    self.game.get_commons_index())
+                summit_id = db.get_summit_id(
+                    self.game.active_summit_index,
+                    self.details["game_id"])
                 db.store_move(self.id, 
-                    self.details["game_id"],
+                    summit_id,
                     msg["move"])
-            # action = PlayerActions.OPTIONS[self.action_lookup[msg["move"]]]
-            # game = self.games_list[self.details["game_id"]]["game"]
-            # game.add_player_action(
-                # self.player_index, 
-                # action, 
-                # db.get_round_index(self.details["round_num"],
-                    # self.details["game_id"]))
-            # self.details["move_num"] += 1
-            # msg["turn"] = db.get_move_num(self.id)
-            # msg["player_id"] = self.id
-            # self.send(msg)
+            else:
+                summit_id = db.get_summit_id(
+                    self.game.active_summit_index,
+                    self.details["game_id"])
+                db.store_move(self.id, 
+                    summit_id,
+                    msg["move"])
+                msg["round_index"] = self.player.active_round
+                msg["player_id"] = self.id
+                self.send(msg)
 
             # score_board = self.game.get_player_score_board(self.player_index)
             # print score_board
@@ -202,12 +194,12 @@ class WebSocketHandler(websocket.WebSocketHandler):
 
     def chat(self,msg):
         msg['player_id'] = self.id;
-        msg['round_id'] = self.details['round_id']
+        msg['summit_id'] = self.details['summit_id']
         msg['name'] = self.details['name']
         msg['time'] = datetime.datetime.now()
         msg['text'].replace('<','').replace('>','')
         db.store_chat(msg)
-        broadcast(msg,self.details['round_id'], self.details['round_id'])
+        broadcast(msg, self.details['game_id'])
 
     def send(self, obj):
         message = json.dumps(obj, default=str)

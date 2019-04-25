@@ -4,6 +4,7 @@ id_number = Math.floor((Math.random() * 100000000) + 1)
 name = ""
 commons_value = "1000";
 my_button = "";
+max_round = "";
 
 function sendObject(obj) {
     json = JSON.stringify(obj);
@@ -12,9 +13,13 @@ function sendObject(obj) {
 
 function initPage(msg) 
 {
+    max_round = msg["max_round"];
     $("#commons-index").text(parseFloat(msg["commons_index"]).toFixed(1));
-    $("#summit-index").text(msg["round_num"]);
-    $("#round-index").text(msg["active_round"]);
+    $("#summit-index").text(msg["summit_num"]);
+    $("#round-index").text(msg["active_round"] + "/" + msg["max_round"]);
+    $("#wealth").text(msg["wealth"]);
+    $("#player-id").text(msg["player_id"]);
+    populate_players_table(msg["players"]);
 }
 
 function addChat(player_id, name, message)
@@ -30,7 +35,30 @@ function addError(message)
     error.foundation('open');
 }
 
+function populateScoreboard(scoreboard) 
+{
+    html_string = ""
+    for (summit = 0; summit < scoreboard.length; summit++){
+        console.log(summit)
+        for (round = 0; round < scoreboard[summit].length; round++){
+            console.log("  " + round)
+            html_string += "<tr><td>Turn " + ((round + 1) + (summit*max_round)) + "</td>";
+            for (move = 0; move < scoreboard[summit][round].length; move++){
+                m = ""
+                m = scoreboard[summit][round][move];
+                console.log("    " + m)
+                if (m == "")
+                    m = "myclear";
+                html_string += "<td><div class='mybox " + m + "'></div></td>";
+            }
+            html_string += "</tr>"
+        }
+    }
+        $("#moves-list").append(html_string);
+}
+
 function addMove(msg) {
+    $("#round-index").text(msg["round_index"] + "/" + max_round)
     color = ""
     if (msg["move"] == "sustain") {color = "mygreen";}
     else if (msg["move"] == "police") {color = "myblue";}
@@ -63,14 +91,6 @@ function populate_players_table(players) {
     $("#players-list").append(html_string);
 }
 
-function get_data() {
-    var message = {
-       type: "game_data"
-    }
-    console.log("get_data_called");
-    sendObject(message);
-}
-
 function webSocketConnect() {
     ws = new WebSocket("ws://localhost:8888/ws");
     
@@ -94,6 +114,9 @@ function webSocketConnect() {
         }
         else if (msg["type"] == "error") {
             addError(msg);
+        }
+        else if (msg["type"] == "scoreboard") {
+            populateScoreboard(msg["scoreboard"]);
         }
     };
     ws.onclose = function() { 
