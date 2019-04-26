@@ -88,7 +88,8 @@ class Summit(object):
                     else:
                         moves.append("")
                 moves[player_index] = "invest"
-            scoreboard.append(moves)
+            if len(moves) > 0:
+                scoreboard.append(moves)
 
         return scoreboard
 

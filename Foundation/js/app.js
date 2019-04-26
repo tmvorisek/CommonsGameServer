@@ -5,6 +5,7 @@ name = ""
 commons_value = "1000";
 my_button = "";
 max_round = "";
+summit = ""
 
 function sendObject(obj) {
     json = JSON.stringify(obj);
@@ -13,10 +14,12 @@ function sendObject(obj) {
 
 function initPage(msg) 
 {
+    if (msg["name"] == null) $('#Name-Modal').foundation('open');
     max_round = msg["max_round"];
+    summit = msg["summit_index"]
     $("#commons-index").text(parseFloat(msg["commons_index"]).toFixed(1));
-    $("#summit-index").text(msg["summit_num"]);
-    $("#round-index").text(msg["active_round"] + "/" + msg["max_round"]);
+    $("#summit-index").text(msg["summit_index"]);
+    $("#round-index").text(msg["active_round"] + "/" + (msg["max_round"]*summit));
     $("#wealth").text(msg["wealth"]);
     $("#player-id").text(msg["player_id"]);
     populate_players_table(msg["players"]);
@@ -39,16 +42,16 @@ function populateScoreboard(scoreboard)
 {
     html_string = ""
     for (summit = 0; summit < scoreboard.length; summit++){
+        html_string += "<tr><td colspan=100%><div class='large-12 column display-card'><center><b>";
+        html_string += "Summit " + (summit + 1) + "</b></center></div></td></tr>";
         console.log(summit)
         for (round = 0; round < scoreboard[summit].length; round++){
             console.log("  " + round)
             html_string += "<tr><td>Turn " + ((round + 1) + (summit*max_round)) + "</td>";
             for (move = 0; move < scoreboard[summit][round].length; move++){
-                m = ""
                 m = scoreboard[summit][round][move];
                 console.log("    " + m)
-                if (m == "")
-                    m = "myclear";
+                if (m == "") m = "myclear";
                 html_string += "<td><div class='mybox " + m + "'></div></td>";
             }
             html_string += "</tr>"
@@ -66,7 +69,7 @@ function addMove(msg) {
     else if (msg["move"] == "invest") {color = "myOrange";};
     html_string = 
         "<tr>" +
-            "<td>Turn 1</td>" +
+            "<td>Turn " + msg["round_index"] + "</td>" +
             "<td><div class='mybox " + color + "'></div></td>" +
             "<td><div class='mybox myclear'></div></td>" +
             "<td><div class='mybox myclear'></div></td>" +

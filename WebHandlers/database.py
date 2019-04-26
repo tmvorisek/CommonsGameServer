@@ -43,10 +43,17 @@ class DBManager():
 
     def new_summit(self, game_id, commons_index):
         summit_table = self.meta.tables['summit']
+        player_table = self.meta.tables['player']
+        old_summit_id = select([func.max(summit_table.c.id)]).where(
+            summit_table.c.game_id == game_id).execute().fetchone()[0]
         summit_table.insert().values(
             game_id = game_id,
             commons_index = 0).execute()
-
+        new_summit_id = select([func.max(summit_table.c.id)]).where(
+            summit_table.c.game_id == game_id).execute().fetchone()[0]
+        player_table.update().values(
+            summit_id = new_summit_id).where(
+            player_table.c.summit_id == old_summit_id).execute()
 
 
     def get_chats(self, game_id):
@@ -99,9 +106,8 @@ class DBManager():
             player_table.c.id == player_id).execute().fetchone()
         summit_details = summit_table.select().where(
             summit_table.c.id==player_details[1]).execute().fetchone()
-        summit_num = select([func.count(summit_table.c.id)]).where(
-            summit_table.c.game_id == summit_details[2]).where(
-            summit_table.c.id <= player_details[1]).execute().fetchone()
+        summit_index = select([func.count(summit_table.c.id)]).where(
+            summit_table.c.game_id == summit_details[2]).execute().fetchone()
         move_details = move_table.select().where(
             move_table.c.player_id == player_id).execute().fetchall()
         players_dump = select([player_table.c.id,player_table.c.name]).where(
@@ -127,7 +133,7 @@ class DBManager():
                 "game_id":summit_details[2],
                 "move_num":len(move_details),
                 "summit_id":player_details[1],
-                "summit_num": summit_num[0],
+                "summit_index": summit_index[0],
                 "name":player_details[2],
                 "worth":player_details[3],
                 "players":players,

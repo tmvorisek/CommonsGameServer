@@ -12,6 +12,13 @@ from tornado import websocket
 from GameLogicII.game import Game
 from GameLogicII.logic_exception import LogicException
 
+from datetime import date
+from apscheduler.schedulers.background import BackgroundScheduler
+
+# Start the scheduler
+sched = BackgroundScheduler()
+sched.start()
+
 
 # we gonna store clients in dictionary..
 clients = dict()
@@ -22,6 +29,7 @@ parser.add_argument('--players', metavar='N', type=int, nargs=1,
                     help='Number of players expected')
 
 db = DBManager()
+games_list = {}
 
 def broadcast(obj, game_id):
     message = json.dumps(obj, default=str)
@@ -76,11 +84,10 @@ def send_admin_email(link_list, admin_email_addr):
     s.sendmail(admin_email_addr, admin_email_addr, msg)
 
 def reload_games():
-    games_list = {}
     moves = db.load_games()
     # action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
     for game_id in moves:
-        game = Game(len(moves[game_id]["players"]))
+        game = Game(len(moves[game_id]["players"]), game_id)
         games_list[game_id] = game
         active_summit = 0
         for move in moves[game_id]["moves"]:
@@ -92,6 +99,25 @@ def reload_games():
                 pass
 
     return games_list
+
+def finish_summit():
+    print("Running nightly routines...")
+    i = 0
+    for game_id in games_list:
+        game = games_list[game_id]
+        if not game.is_last_summit():
+            i = 1
+            game.finish_summit()
+            db.new_summit(game.game_id, game.get_commons_index())
+    if i > 0:
+        periodic_update()
+    print("Nightly update complete")
+
+def periodic_update():
+    # exec_date = datetime.date.today() + datetime.timedelta(minutes=1)
+    sched.add_job(finish_summit, "interval", days=1)
+
+periodic_update()
 
 class WebSocketHandler(websocket.WebSocketHandler):
     action_lookup = {"sustain":0,"police":3,"overharvest":1,"invest":2}
@@ -167,9 +193,7 @@ class WebSocketHandler(websocket.WebSocketHandler):
                 self.game.add_move(self.player_index, msg["move"])
             except LogicException as e:
                 self.send_error(e)
-                self.game.finish_summit()
-                db.new_summit(self.details["game_id"],
-                    self.game.get_commons_index())
+                finish_summit()
                 summit_id = db.get_summit_id(
                     self.game.active_summit_index,
                     self.details["game_id"])

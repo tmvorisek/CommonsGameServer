@@ -5,7 +5,7 @@ from summit import Summit
 
 class Game(object):
     """docstring for Game"""
-    def __init__(self, player_count):
+    def __init__(self, player_count, game_id):
         super(Game, self).__init__()
         self.player_count = player_count
         self.config = ConfigReader.get_rules_from_config("config.json")
@@ -16,6 +16,7 @@ class Game(object):
                 self.config)]
         self.players = [Player(p) for p in range(0,player_count)]
         self.active_summit_index = 0
+        self.game_id = game_id
 
     def add_move(self, player_index, move):
         player = self.players[player_index]
@@ -44,13 +45,13 @@ class Game(object):
                     self.player_count, 
                     new_index, 
                     self.config))
-        if self.active_summit_index < self.config["number_of_summits"]:
+        if not self.is_last_summit():
             self.active_summit_index += 1
         for player in self.players:
             player.wealth += active_summit.get_yield_for_player(player.index)
 
     def is_last_summit(self):
-        return self.active_summit_index < self.config["number_of_summits"]
+        return self.active_summit_index >= self.config["number_of_summits"]
 
 
     def get_player(self, player_index):
